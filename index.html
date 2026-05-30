@@ -19,7 +19,7 @@
   body { font-family:'DM Sans',sans-serif; background:var(--navy); color:var(--white); overflow-x:hidden; }
 
   /* NAV */
-  nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:1.2rem 4rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(201,168,76,0.15); background:rgba(10,22,40,0.92); backdrop-filter:blur(12px); }
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:1.2rem 4rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(201,168,76,0.15); background:rgba(10,22,40,0.98); backdrop-filter:blur(10px); }
   .logo { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--gold); letter-spacing:0.04em; }
   .logo span { color:var(--white); }
   .nav-links { display:flex; gap:2.5rem; list-style:none; }
@@ -29,19 +29,19 @@
   .nav-cta:hover { background:var(--gold-light); }
 
   /* HERO */
-  .hero { min-height:100vh; display:flex; align-items:center; padding:0 4rem; position:relative; overflow:hidden; }
+  .hero { min-height:100vh; display:flex; align-items:center; padding:0 4rem; position:relative; overflow:hidden; margin-top:70px; }
   .hero-bg { position:absolute; inset:0; background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(201,168,76,0.08) 0%, transparent 70%),
     linear-gradient(135deg, #0a1628 0%, #1a2d50 100%); }
-  .hero-grid { position:absolute; inset:0; background-image: linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px); background-size:60px 60px; }
+  .hero-grid { position:absolute; inset:0; background-image: linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px); background-size:50px 50px; }
   .hero-content { position:relative; max-width:680px; }
-  .hero-tag { display:inline-block; font-size:0.75rem; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:1.5rem; border:1px solid rgba(201,168,76,0.3); padding:0.3rem 0.9rem; border-radius:2px; }
+  .hero-tag { display:inline-block; font-size:0.75rem; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:1.5rem; border:1px solid rgba(201,168,76,0.3); padding:0.3rem 0.8rem; border-radius:2px; }
   .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(3rem,6vw,5.5rem); line-height:1.05; font-weight:900; margin-bottom:1.5rem; }
   .hero h1 em { font-style:normal; color:var(--gold); }
   .hero p { font-size:1.1rem; color:var(--muted); line-height:1.8; max-width:480px; margin-bottom:2.5rem; font-weight:300; }
   .hero-btns { display:flex; gap:1rem; flex-wrap:wrap; }
-  .btn-primary { background:var(--gold); color:var(--navy); padding:0.9rem 2.2rem; font-size:0.9rem; font-weight:500; border-radius:2px; text-decoration:none; letter-spacing:0.06em; transition:all 0.2s; }
+  .btn-primary { background:var(--gold); color:var(--navy); padding:0.9rem 2.2rem; font-size:0.9rem; font-weight:500; border-radius:2px; text-decoration:none; letter-spacing:0.06em; transition:all 0.2s; display:inline-block; }
   .btn-primary:hover { background:var(--gold-light); transform:translateY(-1px); }
-  .btn-outline { border:1px solid rgba(201,168,76,0.4); color:var(--gold); padding:0.9rem 2.2rem; font-size:0.9rem; font-weight:400; border-radius:2px; text-decoration:none; letter-spacing:0.06em; transition:all 0.2s; }
+  .btn-outline { border:1px solid rgba(201,168,76,0.4); color:var(--gold); padding:0.9rem 2.2rem; font-size:0.9rem; font-weight:400; border-radius:2px; text-decoration:none; letter-spacing:0.06em; transition:all 0.2s; display:inline-block; }
   .btn-outline:hover { border-color:var(--gold); background:rgba(201,168,76,0.07); }
   .hero-stats { position:absolute; right:4rem; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:2rem; }
   .stat { text-align:right; }
@@ -55,13 +55,41 @@
   .section-sub { color:var(--muted); font-size:1rem; max-width:520px; line-height:1.8; margin-bottom:3.5rem; font-weight:300; }
   .services-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5px; background:rgba(201,168,76,0.1); }
   .service-card { background:var(--navy); padding:2.5rem 2rem; transition:background 0.3s; position:relative; overflow:hidden; }
-  .service-card::before { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--gold),transparent); transform:scaleX(0); transform-origin:left; transition:transform 0.4s; }
+  .service-card::before { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--gold),transparent); transform:scaleX(0); transform-origin:left; transition:transform 0.3s; }
   .service-card:hover { background:var(--mid); }
   .service-card:hover::before { transform:scaleX(1); }
   .svc-icon { width:48px; height:48px; border:1px solid rgba(201,168,76,0.3); display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem; border-radius:2px; font-size:1.4rem; }
   .svc-title { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; margin-bottom:0.8rem; }
   .svc-desc { color:var(--muted); font-size:0.9rem; line-height:1.7; font-weight:300; }
-  .svc-link { display:inline-block; margin-top:1.2rem; color:var(--gold); font-size:0.85rem; text-decoration:none; letter-spacing:0.06em; }
+  .svc-link { display:inline-block; margin-top:1.2rem; color:var(--gold); font-size:0.85rem; text-decoration:none; letter-spacing:0.06em; transition:all 0.2s; }
+  .svc-link:hover { transform:translateX(4px); }
+
+  /* PAYMENT HIGHLIGHT SECTION */
+  .payment-section { background: linear-gradient(135deg, var(--mid) 0%, #152a45 100%); position: relative; overflow: hidden; }
+  .payment-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 168, 76, 0.1);
+    pointer-events: none;
+  }
+  .payment-content { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 1; }
+  .payment-text h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 1rem; }
+  .payment-text h2 em { color: var(--gold); font-style: normal; }
+  .payment-text p { color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; font-size: 1rem; }
+  .payment-features { list-style: none; margin: 2rem 0; }
+  .payment-features li { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; color: var(--muted); }
+  .payment-features li::before { content: '✓'; color: var(--gold); font-weight: bold; font-size: 1.2rem; }
+  .payment-cards-preview { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .payment-card-item { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(201, 168, 76, 0.2); border-radius: 8px; padding: 1.5rem; backdrop-filter: blur(10px); transition: all 0.3s; }
+  .payment-card-item:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--gold); transform: translateY(-3px); }
+  .payment-card-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+  .payment-card-title { font-weight: 600; margin-bottom: 0.5rem; }
+  .payment-card-desc { font-size: 0.85rem; color: var(--muted); }
 
   /* HIGHLIGHTS */
   .highlights { background:var(--mid); }
@@ -90,6 +118,17 @@
   @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
   .hero-content { animation:fadeUp 0.8s ease both; }
   .hero-stats { animation:fadeUp 0.9s 0.15s ease both; }
+
+  @media (max-width: 768px) {
+    nav { flex-direction: column; padding: 1rem 2rem; }
+    .nav-links { flex-direction: column; gap: 1rem; }
+    .hero { padding: 0 2rem; margin-top: 80px; }
+    .hero-stats { position: static; transform: none; margin-top: 2rem; }
+    .section { padding: 4rem 2rem; }
+    .payment-content { grid-template-columns: 1fr; }
+    .hl-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 1.5rem; }
+  }
 </style>
 </head>
 <body>
@@ -98,11 +137,11 @@
   <div class="logo">Nexus<span>Bank</span></div>
   <ul class="nav-links">
     <li><a href="index.html" class="active">Home</a></li>
-    <li><a href="services.html">Subdomain</a></li>
+    <li><a href="services.html">Services</a></li>
     <li><a href="loans.html">Loans</a></li>
     <li><a href="investments.html">Investments</a></li>
+    <li><a href="payment.html">Payments</a></li>
     <li><a href="contact.html">Contact</a></li>
-    <li><a href="corporate_banking.html">Corporate_banking</a></li>
   </ul>
   <a href="contact.html" class="nav-cta">Open Account</a>
 </nav>
@@ -116,7 +155,7 @@
     <p>NexusBank delivers world-class financial services — from personal savings to corporate treasury — with security, intelligence, and care.</p>
     <div class="hero-btns">
       <a href="services.html" class="btn-primary">Explore Services</a>
-      <a href="loans.html" class="btn-outline">Apply for Loan</a>
+      <a href="payment.html" class="btn-outline">Learn About Payments</a>
     </div>
   </div>
   <div class="hero-stats">
@@ -141,7 +180,7 @@
       <div class="svc-icon">💳</div>
       <div class="svc-title">Cards & Payments</div>
       <p class="svc-desc">Debit, credit, and prepaid cards with reward programs, UPI integration, and fraud protection.</p>
-      <a href="services.html" class="svc-link">Learn more →</a>
+      <a href="payment.html" class="svc-link">Learn more →</a>
     </div>
     <div class="service-card">
       <div class="svc-icon">🏠</div>
@@ -159,13 +198,57 @@
       <div class="svc-icon">🏢</div>
       <div class="svc-title">Corporate Banking</div>
       <p class="svc-desc">Trade finance, working capital, payroll solutions, and cash management for businesses of all sizes.</p>
-      <a href="services.html" class="svc-link">Learn more →</a>
+      <a href="corporate_banking.html" class="svc-link">Learn more →</a>
     </div>
     <div class="service-card">
       <div class="svc-icon">🔒</div>
       <div class="svc-title">Digital Security</div>
       <p class="svc-desc">Bank-grade encryption, 2FA, biometric login, and 24×7 fraud monitoring to keep your money safe.</p>
       <a href="services.html" class="svc-link">Learn more →</a>
+    </div>
+  </div>
+</section>
+
+<!-- NEW PAYMENT SECTION -->
+<section class="section payment-section">
+  <div class="payment-content">
+    <div class="payment-text">
+      <div class="section-label">Payment Solutions</div>
+      <h2>Smart <em>Payment</em> Methods for Every Need</h2>
+      <p>Choose from a wide range of payment options — domestic, international, digital, and specialized payment methods designed for modern banking.</p>
+      
+      <ul class="payment-features">
+        <li><strong>Instant Settlements:</strong> IMPS, UPI, QR codes for real-time transfers</li>
+        <li><strong>Secure Banking:</strong> NEFT, RTGS, Demand Drafts for planned payments</li>
+        <li><strong>Global Reach:</strong> SWIFT, Forex Cards, Foreign Remittance services</li>
+        <li><strong>24/7 Availability:</strong> Digital payments work round-the-clock, even on holidays</li>
+        <li><strong>Zero Hidden Fees:</strong> Transparent pricing with no surprise charges</li>
+      </ul>
+
+      <a href="payment.html" class="btn-primary">Explore Payment Methods</a>
+    </div>
+
+    <div class="payment-cards-preview">
+      <div class="payment-card-item">
+        <div class="payment-card-icon">⚡</div>
+        <div class="payment-card-title">RTGS</div>
+        <div class="payment-card-desc">Real-time settlement for high-value urgent transfers in minutes</div>
+      </div>
+      <div class="payment-card-item">
+        <div class="payment-card-icon">📱</div>
+        <div class="payment-card-title">UPI</div>
+        <div class="payment-card-desc">Instant peer-to-peer payments using mobile number or VPA</div>
+      </div>
+      <div class="payment-card-item">
+        <div class="payment-card-icon">🌍</div>
+        <div class="payment-card-title">SWIFT</div>
+        <div class="payment-card-desc">International transfers with complete security and traceability</div>
+      </div>
+      <div class="payment-card-item">
+        <div class="payment-card-icon">🎫</div>
+        <div class="payment-card-title">QR Code</div>
+        <div class="payment-card-desc">Contactless payments with dynamic QR codes in seconds</div>
+      </div>
     </div>
   </div>
 </section>
@@ -188,7 +271,7 @@
       <div class="hl-card card2">
         <div class="card-label">Instant transfers</div>
         <div class="card-amount">₹0 fee</div>
-        <p style="color:var(--muted);font-size:0.85rem;margin-top:0.5rem;font-weight:300;">IMPS · NEFT · RTGS · UPI — all free, all instant</p>
+        <p style="color:var(--muted);font-size:0.85rem;margin-top:0.5rem;font-weight:300;">IMPS · NEFT · RTGS · UPI — all fast, all secure</p>
       </div>
     </div>
     <div>
@@ -211,9 +294,10 @@
   <div class="footer-logo">NexusBank</div>
   <ul class="footer-links">
     <li><a href="index.html">Home</a></li>
-    <li><a href="services.html">Subdomain</a></li>
+    <li><a href="services.html">Services</a></li>
     <li><a href="loans.html">Loans</a></li>
     <li><a href="investments.html">Investments</a></li>
+    <li><a href="payment.html">Payments</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
   <div class="footer-copy">© 2025 NexusBank. All rights reserved.</div>

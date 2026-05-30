@@ -91,6 +91,37 @@
   .payment-card-title { font-weight: 600; margin-bottom: 0.5rem; }
   .payment-card-desc { font-size: 0.85rem; color: var(--muted); }
 
+  /* CORPORATE BANKING SECTION */
+  .corporate-section { background: linear-gradient(135deg, #0f1f35 0%, var(--mid) 100%); position: relative; overflow: hidden; }
+  .corporate-section::after {
+    content: '';
+    position: absolute;
+    bottom: -50%;
+    left: -10%;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 168, 76, 0.1);
+    pointer-events: none;
+  }
+  .corporate-content { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 1; }
+  .corporate-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .corp-card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(201, 168, 76, 0.2); border-radius: 8px; padding: 2rem; backdrop-filter: blur(10px); transition: all 0.3s; }
+  .corp-card:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--gold); transform: translateY(-3px); }
+  .corp-card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .corp-card-title { font-weight: 600; margin-bottom: 0.5rem; font-family: 'Playfair Display', serif; }
+  .corp-card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+  .corp-card-stats { display: flex; gap: 1rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(201, 168, 76, 0.1); }
+  .stat-item { flex: 1; }
+  .stat-item-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; }
+  .stat-item-value { font-size: 1.3rem; font-weight: 600; color: var(--gold); }
+  .corporate-text h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 1rem; }
+  .corporate-text h2 em { color: var(--gold); font-style: normal; }
+  .corporate-text p { color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; font-size: 1rem; }
+  .corporate-features { list-style: none; margin: 2rem 0; }
+  .corporate-features li { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; color: var(--muted); }
+  .corporate-features li::before { content: '◆'; color: var(--gold); font-size: 0.5rem; margin-top: 0.3rem; }
+
   /* HIGHLIGHTS */
   .highlights { background:var(--mid); }
   .hl-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; }
@@ -110,7 +141,7 @@
   /* FOOTER */
   footer { background:#060e1a; padding:3rem 4rem; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(201,168,76,0.1); }
   .footer-logo { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--gold); }
-  .footer-links { display:flex; gap:2rem; list-style:none; }
+  .footer-links { display:flex; gap:2rem; list-style:none; flex-wrap: wrap; }
   .footer-links a { color:var(--muted); text-decoration:none; font-size:0.85rem; transition:color 0.2s; }
   .footer-links a:hover { color:var(--gold); }
   .footer-copy { color:var(--muted); font-size:0.8rem; }
@@ -126,6 +157,7 @@
     .hero-stats { position: static; transform: none; margin-top: 2rem; }
     .section { padding: 4rem 2rem; }
     .payment-content { grid-template-columns: 1fr; }
+    .corporate-content { grid-template-columns: 1fr; }
     .hl-grid { grid-template-columns: 1fr; }
     footer { flex-direction: column; gap: 1.5rem; }
   }
@@ -141,6 +173,7 @@
     <li><a href="loans.html">Loans</a></li>
     <li><a href="investments.html">Investments</a></li>
     <li><a href="payment.html">Payments</a></li>
+    <li><a href="corporate_banking.html">Corporate</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
   <a href="contact.html" class="nav-cta">Open Account</a>
@@ -209,7 +242,7 @@
   </div>
 </section>
 
-<!-- NEW PAYMENT SECTION -->
+<!-- PAYMENT SOLUTIONS SECTION -->
 <section class="section payment-section">
   <div class="payment-content">
     <div class="payment-text">
@@ -249,6 +282,94 @@
         <div class="payment-card-title">QR Code</div>
         <div class="payment-card-desc">Contactless payments with dynamic QR codes in seconds</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- CORPORATE BANKING SECTION -->
+<section class="section corporate-section">
+  <div class="corporate-content">
+    <div class="corporate-visual">
+      <div class="corp-card">
+        <div class="corp-card-icon">💰</div>
+        <div class="corp-card-title">Treasury Management</div>
+        <div class="corp-card-desc">Optimize liquidity, manage cash flow, and maximize returns on surplus funds with advanced treasury solutions.</div>
+        <div class="corp-card-stats">
+          <div class="stat-item">
+            <div class="stat-item-label">Liquidity</div>
+            <div class="stat-item-value">₹4.2T</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-item-label">Entities</div>
+            <div class="stat-item-value">6+</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="corp-card">
+        <div class="corp-card-icon">📋</div>
+        <div class="corp-card-title">Trade Finance</div>
+        <div class="corp-card-desc">Letters of credit, bank guarantees, export bills discounting, and forex risk management for global trade.</div>
+        <div class="corp-card-stats">
+          <div class="stat-item">
+            <div class="stat-item-label">Open LCs</div>
+            <div class="stat-item-value">12</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-item-label">Coverage</div>
+            <div class="stat-item-value">60+</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="corp-card">
+        <div class="corp-card-icon">💸</div>
+        <div class="corp-card-title">Payments & Transfers</div>
+        <div class="corp-card-desc">Bulk payroll processing, RTGS, NEFT, IMPS, and cross-border wire transfers for seamless operations.</div>
+        <div class="corp-card-stats">
+          <div class="stat-item">
+            <div class="stat-item-label">Daily Volume</div>
+            <div class="stat-item-value">₹386 Cr</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-item-label">Transactions</div>
+            <div class="stat-item-value">47+</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="corp-card">
+        <div class="corp-card-icon">📊</div>
+        <div class="corp-card-title">Credit Facilities</div>
+        <div class="corp-card-desc">Working capital, overdrafts, term loans, and customized credit lines with competitive rates for growth.</div>
+        <div class="corp-card-stats">
+          <div class="stat-item">
+            <div class="stat-item-label">Sanctioned</div>
+            <div class="stat-item-value">₹680 Cr</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-item-label">Utilization</div>
+            <div class="stat-item-value">63%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="corporate-text">
+      <div class="section-label">Enterprise Solutions</div>
+      <h2>Command Centre for <em>Corporate Banking</em></h2>
+      <p>Empower your enterprise with NexusBank's comprehensive corporate banking suite designed for modern businesses, from SMEs to large corporates.</p>
+      
+      <ul class="corporate-features">
+        <li><strong>Consolidated Treasury:</strong> Real-time visibility across all accounts and entities</li>
+        <li><strong>Advanced Analytics:</strong> AI-powered cash flow forecasting and financial insights</li>
+        <li><strong>Global Reach:</strong> 60+ countries with correspondent banking network</li>
+        <li><strong>Dedicated Support:</strong> Relationship managers available 24/7 for enterprise clients</li>
+        <li><strong>ERP Integration:</strong> Seamless connection with SAP, Oracle, and other systems</li>
+        <li><strong>Custom Solutions:</strong> Tailored products for unique business requirements</li>
+      </ul>
+
+      <a href="corporate_banking.html" class="btn-primary">Explore Corporate Solutions</a>
     </div>
   </div>
 </section>
@@ -298,6 +419,7 @@
     <li><a href="loans.html">Loans</a></li>
     <li><a href="investments.html">Investments</a></li>
     <li><a href="payment.html">Payments</a></li>
+    <li><a href="corporate_banking.html">Corporate</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
   <div class="footer-copy">© 2025 NexusBank. All rights reserved.</div>

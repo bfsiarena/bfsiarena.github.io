@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexusBank — Modern Banking</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --cream: #faf8f3;
+    --mid: #1e2d4a;
+    --muted: #8a9bb8;
+    --white: #ffffff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--navy); color:var(--white); overflow-x:hidden; }
+
+  /* NAV */
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:1.2rem 4rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(201,168,76,0.15); background:rgba(10,22,40,0.92); backdrop-filter:blur(12px); }
+  .logo { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--gold); letter-spacing:0.04em; }
+  .logo span { color:var(--white); }
+  .nav-links { display:flex; gap:2.5rem; list-style:none; }
+  .nav-links a { color:var(--muted); text-decoration:none; font-size:0.9rem; font-weight:400; letter-spacing:0.04em; transition:color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color:var(--gold); }
+  .nav-cta { background:var(--gold); color:var(--navy); padding:0.55rem 1.5rem; border-radius:2px; font-size:0.85rem; font-weight:500; text-decoration:none; letter-spacing:0.06em; transition:background 0.2s; }
+  .nav-cta:hover { background:var(--gold-light); }
+
+  /* HERO */
+  .hero { min-height:100vh; display:flex; align-items:center; padding:0 4rem; position:relative; overflow:hidden; }
+  .hero-bg { position:absolute; inset:0; background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(201,168,76,0.08) 0%, transparent 70%),
+    linear-gradient(135deg, #0a1628 0%, #1a2d50 100%); }
+  .hero-grid { position:absolute; inset:0; background-image: linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px); background-size:60px 60px; }
+  .hero-content { position:relative; max-width:680px; }
+  .hero-tag { display:inline-block; font-size:0.75rem; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:1.5rem; border:1px solid rgba(201,168,76,0.3); padding:0.3rem 0.9rem; border-radius:2px; }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(3rem,6vw,5.5rem); line-height:1.05; font-weight:900; margin-bottom:1.5rem; }
+  .hero h1 em { font-style:normal; color:var(--gold); }
+  .hero p { font-size:1.1rem; color:var(--muted); line-height:1.8; max-width:480px; margin-bottom:2.5rem; font-weight:300; }
+  .hero-btns { display:flex; gap:1rem; flex-wrap:wrap; }
+  .btn-primary { background:var(--gold); color:var(--navy); padding:0.9rem 2.2rem; font-size:0.9rem; font-weight:500; border-radius:2px; text-decoration:none; letter-spacing:0.06em; transition:all 0.2s; }
+  .btn-primary:hover { background:var(--gold-light); transform:translateY(-1px); }
+  .btn-outline { border:1px solid rgba(201,168,76,0.4); color:var(--gold); padding:0.9rem 2.2rem; font-size:0.9rem; font-weight:400; border-radius:2px; text-decoration:none; letter-spacing:0.06em; transition:all 0.2s; }
+  .btn-outline:hover { border-color:var(--gold); background:rgba(201,168,76,0.07); }
+  .hero-stats { position:absolute; right:4rem; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:2rem; }
+  .stat { text-align:right; }
+  .stat-num { font-family:'Playfair Display',serif; font-size:2.8rem; font-weight:700; color:var(--gold); line-height:1; }
+  .stat-label { font-size:0.75rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-top:0.3rem; }
+
+  /* SERVICES */
+  .section { padding:6rem 4rem; }
+  .section-label { font-size:0.75rem; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:0.8rem; }
+  .section-title { font-family:'Playfair Display',serif; font-size:clamp(2rem,4vw,3rem); font-weight:700; margin-bottom:1rem; }
+  .section-sub { color:var(--muted); font-size:1rem; max-width:520px; line-height:1.8; margin-bottom:3.5rem; font-weight:300; }
+  .services-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5px; background:rgba(201,168,76,0.1); }
+  .service-card { background:var(--navy); padding:2.5rem 2rem; transition:background 0.3s; position:relative; overflow:hidden; }
+  .service-card::before { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--gold),transparent); transform:scaleX(0); transform-origin:left; transition:transform 0.4s; }
+  .service-card:hover { background:var(--mid); }
+  .service-card:hover::before { transform:scaleX(1); }
+  .svc-icon { width:48px; height:48px; border:1px solid rgba(201,168,76,0.3); display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem; border-radius:2px; font-size:1.4rem; }
+  .svc-title { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; margin-bottom:0.8rem; }
+  .svc-desc { color:var(--muted); font-size:0.9rem; line-height:1.7; font-weight:300; }
+  .svc-link { display:inline-block; margin-top:1.2rem; color:var(--gold); font-size:0.85rem; text-decoration:none; letter-spacing:0.06em; }
+
+  /* HIGHLIGHTS */
+  .highlights { background:var(--mid); }
+  .hl-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; }
+  .hl-visual { position:relative; height:420px; }
+  .hl-card { position:absolute; background:var(--navy); border:1px solid rgba(201,168,76,0.15); border-radius:4px; padding:1.5rem; }
+  .hl-card.card1 { top:0; left:0; right:60px; }
+  .hl-card.card2 { bottom:0; left:60px; right:0; }
+  .card-label { font-size:0.7rem; letter-spacing:0.15em; color:var(--muted); text-transform:uppercase; margin-bottom:0.8rem; }
+  .card-amount { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:var(--gold); }
+  .card-bar { margin-top:1rem; display:flex; gap:3px; align-items:flex-end; height:50px; }
+  .bar { background:rgba(201,168,76,0.2); border-radius:2px 2px 0 0; flex:1; transition:background 0.3s; }
+  .bar.active { background:var(--gold); }
+  .hl-list { list-style:none; display:flex; flex-direction:column; gap:1rem; margin-top:2rem; }
+  .hl-list li { display:flex; align-items:flex-start; gap:0.8rem; color:var(--muted); font-size:0.95rem; line-height:1.6; }
+  .hl-list li::before { content:'◆'; color:var(--gold); font-size:0.5rem; margin-top:0.5rem; flex-shrink:0; }
+
+  /* FOOTER */
+  footer { background:#060e1a; padding:3rem 4rem; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(201,168,76,0.1); }
+  .footer-logo { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--gold); }
+  .footer-links { display:flex; gap:2rem; list-style:none; }
+  .footer-links a { color:var(--muted); text-decoration:none; font-size:0.85rem; transition:color 0.2s; }
+  .footer-links a:hover { color:var(--gold); }
+  .footer-copy { color:var(--muted); font-size:0.8rem; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  .hero-content { animation:fadeUp 0.8s ease both; }
+  .hero-stats { animation:fadeUp 0.9s 0.15s ease both; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Nexus<span>Bank</span></div>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="loans.html">Loans</a></li>
+    <li><a href="investments.html">Investments</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Open Account</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Est. 1994 · Trusted by 2M+ clients</div>
+    <h1>Banking<br>built for<br><em>your future.</em></h1>
+    <p>NexusBank delivers world-class financial services — from personal savings to corporate treasury — with security, intelligence, and care.</p>
+    <div class="hero-btns">
+      <a href="services.html" class="btn-primary">Explore Services</a>
+      <a href="loans.html" class="btn-outline">Apply for Loan</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">₹4.2T</div><div class="stat-label">Assets managed</div></div>
+    <div class="stat"><div class="stat-num">2M+</div><div class="stat-label">Active customers</div></div>
+    <div class="stat"><div class="stat-num">98.7%</div><div class="stat-label">Satisfaction rate</div></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-label">What we offer</div>
+  <div class="section-title">Our Core Services</div>
+  <p class="section-sub">A complete suite of financial products designed to grow, protect, and manage your wealth at every stage of life.</p>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="svc-icon">🏦</div>
+      <div class="svc-title">Personal Banking</div>
+      <p class="svc-desc">Savings accounts, current accounts, FDs and RDs with competitive interest rates and zero hidden charges.</p>
+      <a href="services.html" class="svc-link">Learn more →</a>
+    </div>
+    <div class="service-card">
+      <div class="svc-icon">💳</div>
+      <div class="svc-title">Cards & Payments</div>
+      <p class="svc-desc">Debit, credit, and prepaid cards with reward programs, UPI integration, and fraud protection.</p>
+      <a href="services.html" class="svc-link">Learn more →</a>
+    </div>
+    <div class="service-card">
+      <div class="svc-icon">🏠</div>
+      <div class="svc-title">Loans & Mortgages</div>
+      <p class="svc-desc">Home loans, personal loans, vehicle loans and education loans with flexible EMI options.</p>
+      <a href="loans.html" class="svc-link">Learn more →</a>
+    </div>
+    <div class="service-card">
+      <div class="svc-icon">📈</div>
+      <div class="svc-title">Investments</div>
+      <p class="svc-desc">Mutual funds, SIP, bonds, equities, and NPS — expertly curated portfolios for every risk appetite.</p>
+      <a href="investments.html" class="svc-link">Learn more →</a>
+    </div>
+    <div class="service-card">
+      <div class="svc-icon">🏢</div>
+      <div class="svc-title">Corporate Banking</div>
+      <p class="svc-desc">Trade finance, working capital, payroll solutions, and cash management for businesses of all sizes.</p>
+      <a href="services.html" class="svc-link">Learn more →</a>
+    </div>
+    <div class="service-card">
+      <div class="svc-icon">🔒</div>
+      <div class="svc-title">Digital Security</div>
+      <p class="svc-desc">Bank-grade encryption, 2FA, biometric login, and 24×7 fraud monitoring to keep your money safe.</p>
+      <a href="services.html" class="svc-link">Learn more →</a>
+    </div>
+  </div>
+</section>
+
+<section class="section highlights">
+  <div class="hl-grid">
+    <div class="hl-visual">
+      <div class="hl-card card1">
+        <div class="card-label">Portfolio growth</div>
+        <div class="card-amount">+18.4%</div>
+        <div class="card-bar">
+          <div class="bar" style="height:35%"></div>
+          <div class="bar" style="height:55%"></div>
+          <div class="bar" style="height:40%"></div>
+          <div class="bar" style="height:70%"></div>
+          <div class="bar" style="height:60%"></div>
+          <div class="bar active" style="height:90%"></div>
+        </div>
+      </div>
+      <div class="hl-card card2">
+        <div class="card-label">Instant transfers</div>
+        <div class="card-amount">₹0 fee</div>
+        <p style="color:var(--muted);font-size:0.85rem;margin-top:0.5rem;font-weight:300;">IMPS · NEFT · RTGS · UPI — all free, all instant</p>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Why NexusBank</div>
+      <div class="section-title">Banking that<br>works harder</div>
+      <p class="section-sub" style="margin-bottom:0;">We combine decades of financial expertise with cutting-edge technology to deliver outcomes that matter.</p>
+      <ul class="hl-list">
+        <li>RBI-regulated with AAA credit rating and full deposit insurance</li>
+        <li>AI-powered spending insights and personalised financial goals</li>
+        <li>340+ branches and 4,000+ ATMs across India</li>
+        <li>24×7 customer support via phone, chat and in-branch</li>
+        <li>Dedicated relationship managers for premium account holders</li>
+      </ul>
+      <a href="contact.html" class="btn-primary" style="display:inline-block;margin-top:2rem;">Open an Account →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">NexusBank</div>
+  <ul class="footer-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="loans.html">Loans</a></li>
+    <li><a href="investments.html">Investments</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2025 NexusBank. All rights reserved.</div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investments — NexusBank</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#0a1628; --gold:#c9a84c; --gold-light:#f0d080; --mid:#1e2d4a; --muted:#8a9bb8; --white:#ffffff; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--navy); color:var(--white); overflow-x:hidden; }
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:1.2rem 4rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(201,168,76,0.15); background:rgba(10,22,40,0.92); backdrop-filter:blur(12px); }
+  .logo { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--gold); }
+  .logo span { color:var(--white); }
+  .nav-links { display:flex; gap:2.5rem; list-style:none; }
+  .nav-links a { color:var(--muted); text-decoration:none; font-size:0.9rem; letter-spacing:0.04em; transition:color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color:var(--gold); }
+  .nav-cta { background:var(--gold); color:var(--navy); padding:0.55rem 1.5rem; border-radius:2px; font-size:0.85rem; font-weight:500; text-decoration:none; letter-spacing:0.06em; }
+  .page-hero { padding:10rem 4rem 5rem; background:linear-gradient(180deg,var(--mid) 0%,var(--navy) 100%); }
+  .breadcrumb { font-size:0.8rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1rem; }
+  .breadcrumb a { color:var(--gold); text-decoration:none; }
+  .page-title { font-family:'Playfair Display',serif; font-size:clamp(2.5rem,5vw,4rem); font-weight:900; margin-bottom:1rem; }
+  .page-title em { color:var(--gold); font-style:normal; }
+  .page-sub { color:var(--muted); font-size:1rem; max-width:520px; line-height:1.8; font-weight:300; }
+  .section { padding:5rem 4rem; }
+  .section-label { font-size:0.75rem; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:0.6rem; }
+  .section-title { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; margin-bottom:2rem; }
+
+  /* RISK CARDS */
+  .risk-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-bottom:4rem; }
+  .risk-card { border-radius:4px; padding:2rem; border:1px solid; cursor:pointer; transition:all 0.3s; position:relative; overflow:hidden; }
+  .risk-card.conservative { background:rgba(15,110,86,0.08); border-color:rgba(15,110,86,0.25); }
+  .risk-card.moderate { background:rgba(201,168,76,0.06); border-color:rgba(201,168,76,0.25); }
+  .risk-card.aggressive { background:rgba(216,90,48,0.08); border-color:rgba(216,90,48,0.25); }
+  .risk-label { font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.5rem; font-weight:500; }
+  .risk-card.conservative .risk-label { color:#1d9e75; }
+  .risk-card.moderate .risk-label { color:var(--gold); }
+  .risk-card.aggressive .risk-label { color:#d85a30; }
+  .risk-name { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; margin-bottom:0.5rem; }
+  .risk-return { font-size:2rem; font-family:'Playfair Display',serif; font-weight:700; }
+  .risk-card.conservative .risk-return { color:#1d9e75; }
+  .risk-card.moderate .risk-return { color:var(--gold); }
+  .risk-card.aggressive .risk-return { color:#d85a30; }
+  .risk-return span { font-size:0.85rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-weight:300; }
+  .risk-desc { color:var(--muted); font-size:0.85rem; margin-top:0.8rem; line-height:1.6; font-weight:300; }
+  .risk-products { margin-top:1rem; display:flex; flex-wrap:wrap; gap:0.5rem; }
+  .product-tag { font-size:0.72rem; padding:0.2rem 0.7rem; border-radius:2px; }
+  .conservative .product-tag { background:rgba(15,110,86,0.15); color:#1d9e75; }
+  .moderate .product-tag { background:rgba(201,168,76,0.12); color:var(--gold); }
+  .aggressive .product-tag { background:rgba(216,90,48,0.12); color:#d85a30; }
+
+  /* PRODUCT TABLE */
+  .inv-table { width:100%; border-collapse:separate; border-spacing:0; }
+  .inv-table th { background:var(--mid); padding:1rem 1.2rem; font-size:0.75rem; letter-spacing:0.1em; color:var(--gold); text-transform:uppercase; font-weight:500; text-align:left; border-bottom:1px solid rgba(201,168,76,0.15); }
+  .inv-table td { padding:1rem 1.2rem; font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.04); }
+  .inv-table tr:last-child td { border-bottom:none; }
+  .inv-table tr:hover td { background:rgba(201,168,76,0.03); }
+  .return-pos { color:#1d9e75; font-weight:500; }
+  .risk-low { color:#1d9e75; }
+  .risk-med { color:var(--gold); }
+  .risk-high { color:#d85a30; }
+
+  /* SIP CALC */
+  .sip-wrap { background:var(--mid); border:1px solid rgba(201,168,76,0.15); border-radius:4px; padding:3rem; margin-top:3rem; }
+  .sip-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start; }
+  .input-group label { display:block; font-size:0.8rem; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; margin-bottom:0.7rem; }
+  .input-row { display:flex; align-items:center; gap:1rem; }
+  .input-row input[type=range] { flex:1; -webkit-appearance:none; height:3px; background:rgba(201,168,76,0.2); border-radius:2px; outline:none; }
+  .input-row input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; background:var(--gold); border-radius:50%; cursor:pointer; }
+  .input-value { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--gold); min-width:80px; text-align:right; font-weight:700; }
+  .sip-result { display:flex; flex-direction:column; gap:1.5rem; }
+  .result-main { text-align:center; padding:2rem; background:rgba(201,168,76,0.05); border:1px solid rgba(201,168,76,0.15); border-radius:4px; }
+  .result-label { font-size:0.8rem; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; margin-bottom:0.5rem; }
+  .result-amount { font-family:'Playfair Display',serif; font-size:2.8rem; font-weight:700; color:var(--gold); }
+  .result-breakdown { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.8rem; }
+  .breakdown-item { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:4px; padding:1rem; text-align:center; }
+  .breakdown-label { font-size:0.72rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:0.3rem; }
+  .breakdown-value { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--white); font-weight:700; }
+  .btn-apply { display:inline-block; background:var(--gold); color:var(--navy); padding:0.7rem 1.8rem; border-radius:2px; font-size:0.85rem; font-weight:500; text-decoration:none; letter-spacing:0.06em; transition:background 0.2s; margin-top:1.5rem; }
+  .btn-apply:hover { background:var(--gold-light); }
+
+  footer { background:#060e1a; padding:3rem 4rem; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(201,168,76,0.1); }
+  .footer-logo { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--gold); }
+  .footer-links { display:flex; gap:2rem; list-style:none; }
+  .footer-links a { color:var(--muted); text-decoration:none; font-size:0.85rem; transition:color 0.2s; }
+  .footer-links a:hover { color:var(--gold); }
+  .footer-copy { color:var(--muted); font-size:0.8rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Nexus<span>Bank</span></div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="loans.html">Loans</a></li>
+    <li><a href="investments.html" class="active">Investments</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Start Investing</a>
+</nav>
+
+<div class="page-hero">
+  <div class="breadcrumb"><a href="index.html">Home</a> / Investments</div>
+  <h1 class="page-title">Grow your <em>wealth</em></h1>
+  <p class="page-sub">From safe fixed-income instruments to high-growth equity — expertly managed portfolios for every risk profile and financial goal.</p>
+</div>
+
+<section class="section">
+  <div class="section-label">Choose your profile</div>
+  <div class="section-title">Investment by risk appetite</div>
+  <div class="risk-grid">
+    <div class="risk-card conservative">
+      <div class="risk-label">Low Risk</div>
+      <div class="risk-name">Conservative</div>
+      <div class="risk-return">7–9% <span>expected p.a.</span></div>
+      <p class="risk-desc">Capital preservation with steady returns. Ideal for retirees and first-time investors.</p>
+      <div class="risk-products">
+        <span class="product-tag">Fixed Deposits</span>
+        <span class="product-tag">Debt Funds</span>
+        <span class="product-tag">NPS</span>
+        <span class="product-tag">RD</span>
+      </div>
+    </div>
+    <div class="risk-card moderate">
+      <div class="risk-label">Medium Risk</div>
+      <div class="risk-name">Balanced</div>
+      <div class="risk-return">11–14% <span>expected p.a.</span></div>
+      <p class="risk-desc">Balanced mix of growth and safety. Best for medium-term goals like home or education.</p>
+      <div class="risk-products">
+        <span class="product-tag">Hybrid Funds</span>
+        <span class="product-tag">Balanced MF</span>
+        <span class="product-tag">Govt Bonds</span>
+        <span class="product-tag">SIP</span>
+      </div>
+    </div>
+    <div class="risk-card aggressive">
+      <div class="risk-label">High Risk</div>
+      <div class="risk-name">Aggressive</div>
+      <div class="risk-return">16–22% <span>expected p.a.</span></div>
+      <p class="risk-desc">Maximum growth potential with market exposure. Suited for long-term wealth creation.</p>
+      <div class="risk-products">
+        <span class="product-tag">Equity Funds</span>
+        <span class="product-tag">Stocks</span>
+        <span class="product-tag">ELSS</span>
+        <span class="product-tag">ETF</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">All products</div>
+  <div class="section-title">Investment products</div>
+  <table class="inv-table">
+    <thead><tr>
+      <th>Product</th>
+      <th>Type</th>
+      <th>Expected Returns</th>
+      <th>Risk Level</th>
+      <th>Min. Investment</th>
+      <th>Lock-in</th>
+      <th>Tax Benefit</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>Fixed Deposit</td><td>Debt</td><td class="return-pos">6.5–8.1%</td><td class="risk-low">Low</td><td>₹1,000</td><td>7 days – 10 yrs</td><td>No (taxable)</td></tr>
+      <tr><td>Recurring Deposit</td><td>Debt</td><td class="return-pos">6.5–7.5%</td><td class="risk-low">Low</td><td>₹500/mo</td><td>6 months – 10 yrs</td><td>No (taxable)</td></tr>
+      <tr><td>Public Provident Fund</td><td>Govt</td><td class="return-pos">7.1%</td><td class="risk-low">Negligible</td><td>₹500/yr</td><td>15 years</td><td>Yes (80C)</td></tr>
+      <tr><td>NPS Tier-I</td><td>Pension</td><td class="return-pos">9–12%</td><td class="risk-low">Low–Med</td><td>₹500/yr</td><td>Till retirement</td><td>Yes (80CCD)</td></tr>
+      <tr><td>Debt Mutual Fund</td><td>MF</td><td class="return-pos">7–10%</td><td class="risk-low">Low</td><td>₹500</td><td>None</td><td>No</td></tr>
+      <tr><td>Hybrid Mutual Fund</td><td>MF</td><td class="return-pos">10–14%</td><td class="risk-med">Medium</td><td>₹500</td><td>None</td><td>No</td></tr>
+      <tr><td>ELSS (Tax Saver MF)</td><td>MF</td><td class="return-pos">12–18%</td><td class="risk-med">Medium–High</td><td>₹500</td><td>3 years</td><td>Yes (80C)</td></tr>
+      <tr><td>Large Cap Equity Fund</td><td>Equity</td><td class="return-pos">12–15%</td><td class="risk-med">Medium–High</td><td>₹500</td><td>None</td><td>No</td></tr>
+      <tr><td>Mid & Small Cap Fund</td><td>Equity</td><td class="return-pos">15–22%</td><td class="risk-high">High</td><td>₹500</td><td>None</td><td>No</td></tr>
+      <tr><td>Direct Stocks (Demat)</td><td>Equity</td><td class="return-pos">Market-linked</td><td class="risk-high">Very High</td><td>₹1</td><td>None</td><td>No</td></tr>
+      <tr><td>Gold ETF / SGBs</td><td>Commodity</td><td class="return-pos">8–12%</td><td class="risk-med">Medium</td><td>₹100</td><td>8 yrs (SGB)</td><td>Partial</td></tr>
+      <tr><td>Sovereign Bonds</td><td>Govt</td><td class="return-pos">7.0–7.5%</td><td class="risk-low">Negligible</td><td>₹1,000</td><td>5–40 years</td><td>No</td></tr>
+    </tbody>
+  </table>
+
+  <!-- SIP CALCULATOR -->
+  <div class="section-label" style="margin-top:4rem;">Calculator</div>
+  <div class="section-title" style="margin-bottom:0;">SIP Returns Calculator</div>
+  <div class="sip-wrap">
+    <div class="sip-grid">
+      <div style="display:flex;flex-direction:column;gap:2rem;">
+        <div class="input-group">
+          <label>Monthly SIP Amount</label>
+          <div class="input-row">
+            <input type="range" id="sip" min="500" max="100000" step="500" value="10000" oninput="sipCalc()">
+            <div class="input-value" id="sipVal">₹10,000</div>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Expected Return Rate (% p.a.)</label>
+          <div class="input-row">
+            <input type="range" id="sipRate" min="4" max="25" step="0.5" value="12" oninput="sipCalc()">
+            <div class="input-value" id="sipRateVal">12.0%</div>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Investment Period</label>
+          <div class="input-row">
+            <input type="range" id="sipYears" min="1" max="30" step="1" value="10" oninput="sipCalc()">
+            <div class="input-value" id="sipYearsVal">10 yrs</div>
+          </div>
+        </div>
+        <a href="contact.html" class="btn-apply" style="margin-top:0;">Start SIP Investment →</a>
+      </div>
+      <div class="sip-result">
+        <div class="result-main">
+          <div class="result-label">Total corpus</div>
+          <div class="result-amount" id="corpus">₹23.2L</div>
+        </div>
+        <div class="result-breakdown">
+          <div class="breakdown-item">
+            <div class="breakdown-label">Invested</div>
+            <div class="breakdown-value" id="invested">₹12.0L</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-label">Returns</div>
+            <div class="breakdown-value" id="gains" style="color:#1d9e75;">₹11.2L</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-label">Gain</div>
+            <div class="breakdown-value" id="gainPct" style="color:#1d9e75;">+93%</div>
+          </div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:1.2rem;font-size:0.85rem;color:var(--muted);line-height:1.7;">
+          💡 <strong style="color:var(--white);">Power of compounding:</strong> Starting early dramatically multiplies your wealth. ₹10,000/month for 20 years at 12% returns ₹99.9L — more than double the 10-year outcome.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">NexusBank</div>
+  <ul class="footer-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="loans.html">Loans</a></li>
+    <li><a href="investments.html">Investments</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2025 NexusBank. All rights reserved.</div>
+</footer>
+
+<script>
+function fmt(n) {
+  if(n>=10000000) return '₹'+(n/10000000).toFixed(1)+'Cr';
+  if(n>=100000) return '₹'+(n/100000).toFixed(1)+'L';
+  return '₹'+Math.round(n).toLocaleString('en-IN');
+}
+function sipCalc() {
+  const P = +document.getElementById('sip').value;
+  const r = +document.getElementById('sipRate').value / 12 / 100;
+  const n = +document.getElementById('sipYears').value * 12;
+  document.getElementById('sipVal').textContent = '₹'+P.toLocaleString('en-IN');
+  document.getElementById('sipRateVal').textContent = (+document.getElementById('sipRate').value).toFixed(1)+'%';
+  document.getElementById('sipYearsVal').textContent = document.getElementById('sipYears').value+' yrs';
+  const fv = P * (Math.pow(1+r,n)-1) / r * (1+r);
+  const invested = P * n;
+  const gains = fv - invested;
+  const gainPct = Math.round(gains/invested*100);
+  document.getElementById('corpus').textContent = fmt(Math.round(fv));
+  document.getElementById('invested').textContent = fmt(invested);
+  document.getElementById('gains').textContent = fmt(Math.round(gains));
+  document.getElementById('gainPct').textContent = '+'+gainPct+'%';
+}
+sipCalc();
+</script>
+</body>
+</html>

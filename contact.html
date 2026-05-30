@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact & Open Account — NexusBank</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#0a1628; --gold:#c9a84c; --gold-light:#f0d080; --mid:#1e2d4a; --muted:#8a9bb8; --white:#ffffff; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--navy); color:var(--white); overflow-x:hidden; }
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:1.2rem 4rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(201,168,76,0.15); background:rgba(10,22,40,0.92); backdrop-filter:blur(12px); }
+  .logo { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--gold); }
+  .logo span { color:var(--white); }
+  .nav-links { display:flex; gap:2.5rem; list-style:none; }
+  .nav-links a { color:var(--muted); text-decoration:none; font-size:0.9rem; letter-spacing:0.04em; transition:color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color:var(--gold); }
+  .nav-cta { background:var(--gold); color:var(--navy); padding:0.55rem 1.5rem; border-radius:2px; font-size:0.85rem; font-weight:500; text-decoration:none; letter-spacing:0.06em; }
+  .page-hero { padding:10rem 4rem 5rem; background:linear-gradient(180deg,var(--mid) 0%,var(--navy) 100%); }
+  .breadcrumb { font-size:0.8rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1rem; }
+  .breadcrumb a { color:var(--gold); text-decoration:none; }
+  .page-title { font-family:'Playfair Display',serif; font-size:clamp(2.5rem,5vw,4rem); font-weight:900; margin-bottom:1rem; }
+  .page-title em { color:var(--gold); font-style:normal; }
+  .page-sub { color:var(--muted); font-size:1rem; max-width:520px; line-height:1.8; font-weight:300; }
+
+  .section { padding:5rem 4rem; }
+  .contact-grid { display:grid; grid-template-columns:1fr 1.6fr; gap:4rem; align-items:start; }
+
+  /* INFO SIDE */
+  .info-side { display:flex; flex-direction:column; gap:2rem; }
+  .info-card { background:var(--mid); border:1px solid rgba(201,168,76,0.1); border-radius:4px; padding:1.5rem; }
+  .info-card-title { font-size:0.75rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; margin-bottom:0.8rem; font-weight:500; }
+  .info-item { display:flex; align-items:flex-start; gap:0.8rem; margin-bottom:0.8rem; }
+  .info-item:last-child { margin-bottom:0; }
+  .info-icon { color:var(--gold); font-size:1rem; margin-top:0.1rem; flex-shrink:0; }
+  .info-text { font-size:0.9rem; color:var(--muted); line-height:1.6; font-weight:300; }
+  .info-text strong { color:var(--white); display:block; font-weight:500; font-size:0.9rem; margin-bottom:0.15rem; }
+  .hours-row { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:0.85rem; }
+  .hours-row:last-child { border-bottom:none; }
+  .hours-row span:first-child { color:var(--muted); }
+  .hours-row span:last-child { color:var(--white); }
+  .badge-open { background:rgba(15,110,86,0.15); color:#1d9e75; font-size:0.7rem; padding:0.15rem 0.5rem; border-radius:2px; }
+
+  /* FORM */
+  .form-wrap { background:var(--mid); border:1px solid rgba(201,168,76,0.15); border-radius:4px; padding:2.5rem; }
+  .form-title { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; margin-bottom:0.4rem; }
+  .form-sub { color:var(--muted); font-size:0.88rem; line-height:1.6; margin-bottom:2rem; font-weight:300; }
+  .form-steps { display:flex; gap:0; margin-bottom:2rem; }
+  .step-item { display:flex; align-items:center; gap:0.5rem; flex:1; }
+  .step-num { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:500; flex-shrink:0; }
+  .step-num.done { background:rgba(201,168,76,0.15); color:var(--gold); border:1px solid rgba(201,168,76,0.3); }
+  .step-num.active { background:var(--gold); color:var(--navy); }
+  .step-num.inactive { background:rgba(255,255,255,0.05); color:var(--muted); border:1px solid rgba(255,255,255,0.08); }
+  .step-label { font-size:0.75rem; color:var(--muted); }
+  .step-divider { flex:1; height:1px; background:rgba(255,255,255,0.08); margin:0 0.5rem; }
+  .form-section { display:none; animation:fadeIn 0.3s ease; }
+  .form-section.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
+  .form-row.full { grid-template-columns:1fr; }
+  .form-group { display:flex; flex-direction:column; gap:0.4rem; }
+  .form-group label { font-size:0.75rem; letter-spacing:0.08em; color:var(--muted); text-transform:uppercase; }
+  .form-group input, .form-group select, .form-group textarea {
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:3px;
+    color:var(--white); padding:0.75rem 1rem; font-size:0.9rem; font-family:'DM Sans',sans-serif;
+    outline:none; transition:border-color 0.2s; width:100%;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:rgba(201,168,76,0.5); }
+  .form-group select option { background:#1e2d4a; }
+  .form-group textarea { resize:vertical; min-height:100px; }
+  .form-actions { display:flex; gap:1rem; margin-top:1.5rem; align-items:center; }
+  .btn-next { background:var(--gold); color:var(--navy); padding:0.8rem 2rem; border:none; border-radius:2px; font-size:0.9rem; font-weight:500; cursor:pointer; letter-spacing:0.06em; transition:background 0.2s; font-family:'DM Sans',sans-serif; }
+  .btn-next:hover { background:var(--gold-light); }
+  .btn-back { background:none; border:1px solid rgba(255,255,255,0.1); color:var(--muted); padding:0.8rem 1.5rem; border-radius:2px; font-size:0.9rem; cursor:pointer; transition:all 0.2s; font-family:'DM Sans',sans-serif; }
+  .btn-back:hover { border-color:rgba(255,255,255,0.25); color:var(--white); }
+  .account-types { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin-bottom:1rem; }
+  .account-option { border:1px solid rgba(255,255,255,0.1); border-radius:3px; padding:1rem; cursor:pointer; transition:all 0.2s; }
+  .account-option:hover { border-color:rgba(201,168,76,0.3); }
+  .account-option.selected { border-color:rgba(201,168,76,0.6); background:rgba(201,168,76,0.06); }
+  .acc-name { font-size:0.9rem; font-weight:500; margin-bottom:0.2rem; }
+  .acc-rate { font-size:0.8rem; color:var(--gold); }
+  .success-screen { text-align:center; padding:2rem 0; }
+  .success-icon { font-size:3rem; margin-bottom:1rem; }
+  .success-title { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; margin-bottom:0.8rem; }
+  .success-title em { color:var(--gold); font-style:normal; }
+  .success-msg { color:var(--muted); font-size:0.95rem; line-height:1.7; max-width:380px; margin:0 auto 2rem; font-weight:300; }
+  .ref-box { display:inline-block; background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.2); border-radius:3px; padding:0.8rem 2rem; font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--gold); letter-spacing:0.1em; }
+
+  footer { background:#060e1a; padding:3rem 4rem; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(201,168,76,0.1); }
+  .footer-logo { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--gold); }
+  .footer-links { display:flex; gap:2rem; list-style:none; }
+  .footer-links a { color:var(--muted); text-decoration:none; font-size:0.85rem; transition:color 0.2s; }
+  .footer-links a:hover { color:var(--gold); }
+  .footer-copy { color:var(--muted); font-size:0.8rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Nexus<span>Bank</span></div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="loans.html">Loans</a></li>
+    <li><a href="investments.html">Investments</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Open Account</a>
+</nav>
+
+<div class="page-hero">
+  <div class="breadcrumb"><a href="index.html">Home</a> / Contact</div>
+  <h1 class="page-title">Let's get <em>started</em></h1>
+  <p class="page-sub">Open an account in minutes, or reach out to our team for any queries. We're here to help.</p>
+</div>
+
+<section class="section">
+  <div class="contact-grid">
+    <!-- INFO -->
+    <div class="info-side">
+      <div class="info-card">
+        <div class="info-card-title">Contact channels</div>
+        <div class="info-item">
+          <div class="info-icon">📞</div>
+          <div class="info-text"><strong>Customer Care</strong>1800-XXX-XXXX (Toll free)</div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">📧</div>
+          <div class="info-text"><strong>Email Support</strong>support@nexusbank.in</div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">💬</div>
+          <div class="info-text"><strong>Live Chat</strong>Available on app & website 24×7</div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">📍</div>
+          <div class="info-text"><strong>Head Office</strong>NexusBank Tower, Bandra Kurla Complex, Mumbai — 400 051</div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-title">Branch hours</div>
+        <div class="hours-row"><span>Monday – Friday</span><span>9:30 AM – 4:30 PM <span class="badge-open">Open</span></span></div>
+        <div class="hours-row"><span>Saturday</span><span>10:00 AM – 2:00 PM</span></div>
+        <div class="hours-row"><span>Sunday</span><span>Closed</span></div>
+        <div class="hours-row"><span>ATMs</span><span>24 × 7</span></div>
+        <div class="hours-row"><span>Digital Banking</span><span>24 × 7</span></div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-title">Quick links</div>
+        <div style="display:flex;flex-direction:column;gap:0.7rem;">
+          <a href="loans.html" style="color:var(--gold);text-decoration:none;font-size:0.9rem;">→ Apply for a loan</a>
+          <a href="investments.html" style="color:var(--gold);text-decoration:none;font-size:0.9rem;">→ Start investing</a>
+          <a href="services.html" style="color:var(--gold);text-decoration:none;font-size:0.9rem;">→ Explore services</a>
+          <a href="#" style="color:var(--muted);text-decoration:none;font-size:0.9rem;">→ Find nearest branch</a>
+          <a href="#" style="color:var(--muted);text-decoration:none;font-size:0.9rem;">→ Download NexusApp</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-wrap">
+      <div class="form-title">Open an Account</div>
+      <p class="form-sub">Complete your KYC details digitally. Takes less than 5 minutes.</p>
+
+      <div class="form-steps">
+        <div class="step-item">
+          <div class="step-num active" id="s1">1</div>
+          <div class="step-label">Account type</div>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step-item">
+          <div class="step-num inactive" id="s2">2</div>
+          <div class="step-label">Personal info</div>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step-item">
+          <div class="step-num inactive" id="s3">3</div>
+          <div class="step-label">Documents</div>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step-item">
+          <div class="step-num inactive" id="s4">4</div>
+          <div class="step-label">Confirm</div>
+        </div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div id="step1" class="form-section active">
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;font-weight:300;">Select the type of account you'd like to open:</p>
+        <div class="account-types">
+          <div class="account-option selected" onclick="selectAcc(this)">
+            <div class="acc-name">NexusPrime Savings</div>
+            <div class="acc-rate">7.25% p.a. · Zero balance</div>
+          </div>
+          <div class="account-option" onclick="selectAcc(this)">
+            <div class="acc-name">Classic Savings</div>
+            <div class="acc-rate">4.50% p.a. · ₹5,000 min</div>
+          </div>
+          <div class="account-option" onclick="selectAcc(this)">
+            <div class="acc-name">Current Account</div>
+            <div class="acc-rate">Business · Overdraft facility</div>
+          </div>
+          <div class="account-option" onclick="selectAcc(this)">
+            <div class="acc-name">Fixed Deposit</div>
+            <div class="acc-rate">Up to 8.10% p.a.</div>
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group">
+            <label>I am applying as</label>
+            <select><option>Individual</option><option>Joint Account</option><option>Business / Firm</option><option>NRI</option></select>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-next" onclick="goStep(2)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div id="step2" class="form-section">
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input type="text" placeholder="Arjun"></div>
+          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Sharma"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Date of Birth</label><input type="date"></div>
+          <div class="form-group"><label>Mobile Number</label><input type="tel" placeholder="+91 98765 43210"></div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group"><label>Email Address</label><input type="email" placeholder="arjun@email.com"></div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group"><label>Residential Address</label><textarea placeholder="Flat / House No, Street, Area..."></textarea></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>City</label><input type="text" placeholder="Mumbai"></div>
+          <div class="form-group"><label>PIN Code</label><input type="text" placeholder="400001"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-back" onclick="goStep(1)">← Back</button>
+          <button class="btn-next" onclick="goStep(3)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div id="step3" class="form-section">
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;font-weight:300;">Upload your KYC documents. All documents are verified via DigiLocker and Aadhaar OTP.</p>
+        <div class="form-row full">
+          <div class="form-group"><label>PAN Card Number</label><input type="text" placeholder="ABCDE1234F"></div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group"><label>Aadhaar Number</label><input type="text" placeholder="XXXX XXXX XXXX"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Occupation</label>
+            <select>
+              <option>Salaried (Private)</option>
+              <option>Salaried (Govt/PSU)</option>
+              <option>Self-employed / Business</option>
+              <option>Professional (Doctor/CA etc.)</option>
+              <option>Student</option>
+              <option>Retired</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Annual Income</label>
+            <select>
+              <option>Below ₹2.5L</option>
+              <option>₹2.5L – ₹5L</option>
+              <option>₹5L – ₹10L</option>
+              <option>₹10L – ₹25L</option>
+              <option>Above ₹25L</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group"><label>Any message / special request</label><textarea placeholder="Optional — let us know if you need assistance or have any special requirements..."></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-back" onclick="goStep(2)">← Back</button>
+          <button class="btn-next" onclick="goStep(4)">Review & Submit →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div id="step4" class="form-section">
+        <div style="background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.1);border-radius:3px;padding:1.5rem;margin-bottom:1.5rem;font-size:0.85rem;color:var(--muted);line-height:1.8;">
+          By submitting this application, I confirm that all information provided is accurate and complete. I agree to NexusBank's Terms & Conditions, Privacy Policy, and consent to KYC verification via CKYC/DigiLocker. I authorise NexusBank to contact me on the details provided.
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:0.7rem;margin-bottom:1rem;">
+          <input type="checkbox" id="agree" style="margin-top:0.2rem;accent-color:var(--gold);flex-shrink:0;">
+          <label for="agree" style="font-size:0.85rem;color:var(--muted);cursor:pointer;">I agree to the Terms & Conditions and consent to KYC verification.</label>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:0.7rem;margin-bottom:1.5rem;">
+          <input type="checkbox" id="marketing" style="margin-top:0.2rem;accent-color:var(--gold);flex-shrink:0;">
+          <label for="marketing" style="font-size:0.85rem;color:var(--muted);cursor:pointer;">Send me updates about NexusBank products, offers, and financial tips.</label>
+        </div>
+        <div class="form-actions">
+          <button class="btn-back" onclick="goStep(3)">← Back</button>
+          <button class="btn-next" onclick="submitForm()">Submit Application ✓</button>
+        </div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div id="success" class="form-section">
+        <div class="success-screen">
+          <div class="success-icon">✅</div>
+          <div class="success-title">Application <em>Submitted!</em></div>
+          <p class="success-msg">Thank you for choosing NexusBank. Your account opening request has been received. Our team will verify your documents and activate your account within 24–48 hours.</p>
+          <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem;">Your reference number</p>
+          <div class="ref-box">NXB-2025-82947</div>
+          <p style="font-size:0.8rem;color:var(--muted);margin-top:1.5rem;">A confirmation has been sent to your registered email and mobile number.</p>
+          <a href="index.html" style="display:inline-block;margin-top:2rem;color:var(--gold);font-size:0.9rem;text-decoration:none;">← Back to Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">NexusBank</div>
+  <ul class="footer-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="loans.html">Loans</a></li>
+    <li><a href="investments.html">Investments</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2025 NexusBank. All rights reserved.</div>
+</footer>
+
+<script>
+let currentStep = 1;
+function selectAcc(el) {
+  document.querySelectorAll('.account-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function goStep(n) {
+  document.getElementById('step'+currentStep).classList.remove('active');
+  document.getElementById('s'+currentStep).className = 'step-num done';
+  currentStep = n;
+  document.getElementById('step'+n).classList.add('active');
+  document.getElementById('s'+n).className = 'step-num active';
+}
+function submitForm() {
+  document.getElementById('step4').classList.remove('active');
+  document.getElementById('s4').className = 'step-num done';
+  document.getElementById('success').classList.add('active');
+}
+</script>
+</body>
+</html>

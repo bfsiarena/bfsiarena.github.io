@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loans — NexusBank</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#0a1628; --gold:#c9a84c; --gold-light:#f0d080; --mid:#1e2d4a; --muted:#8a9bb8; --white:#ffffff; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--navy); color:var(--white); overflow-x:hidden; }
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:1.2rem 4rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(201,168,76,0.15); background:rgba(10,22,40,0.92); backdrop-filter:blur(12px); }
+  .logo { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--gold); }
+  .logo span { color:var(--white); }
+  .nav-links { display:flex; gap:2.5rem; list-style:none; }
+  .nav-links a { color:var(--muted); text-decoration:none; font-size:0.9rem; letter-spacing:0.04em; transition:color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color:var(--gold); }
+  .nav-cta { background:var(--gold); color:var(--navy); padding:0.55rem 1.5rem; border-radius:2px; font-size:0.85rem; font-weight:500; text-decoration:none; letter-spacing:0.06em; }
+  .page-hero { padding:10rem 4rem 5rem; background:linear-gradient(180deg,var(--mid) 0%,var(--navy) 100%); }
+  .breadcrumb { font-size:0.8rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1rem; }
+  .breadcrumb a { color:var(--gold); text-decoration:none; }
+  .page-title { font-family:'Playfair Display',serif; font-size:clamp(2.5rem,5vw,4rem); font-weight:900; margin-bottom:1rem; }
+  .page-title em { color:var(--gold); font-style:normal; }
+  .page-sub { color:var(--muted); font-size:1rem; max-width:520px; line-height:1.8; font-weight:300; }
+  .section { padding:5rem 4rem; }
+  .section-label { font-size:0.75rem; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:0.6rem; }
+  .section-title { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; margin-bottom:2rem; }
+
+  /* LOAN CARDS */
+  .loan-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.5rem; margin-bottom:5rem; }
+  .loan-card { background:var(--mid); border:1px solid rgba(201,168,76,0.1); border-radius:4px; padding:2rem; transition:all 0.3s; }
+  .loan-card:hover { border-color:rgba(201,168,76,0.35); transform:translateY(-3px); }
+  .loan-card.featured { border-color:rgba(201,168,76,0.35); background:linear-gradient(135deg,var(--mid),#1a2840); }
+  .loan-type { font-size:0.7rem; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; margin-bottom:0.5rem; }
+  .loan-name { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; margin-bottom:0.5rem; }
+  .loan-rate { font-size:2.2rem; font-family:'Playfair Display',serif; color:var(--gold); font-weight:700; }
+  .loan-rate span { font-size:0.9rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-weight:300; }
+  .loan-meta { display:flex; gap:1.5rem; margin:1rem 0; }
+  .meta-item { font-size:0.8rem; color:var(--muted); }
+  .meta-item strong { display:block; color:var(--white); font-size:0.95rem; font-weight:500; margin-bottom:0.1rem; }
+  .loan-desc { color:var(--muted); font-size:0.88rem; line-height:1.7; font-weight:300; border-top:1px solid rgba(201,168,76,0.1); padding-top:1rem; margin-top:1rem; }
+  .loan-features { list-style:none; margin:1rem 0 1.5rem; display:flex; flex-direction:column; gap:0.4rem; }
+  .loan-features li { font-size:0.85rem; color:var(--muted); display:flex; align-items:center; gap:0.5rem; }
+  .loan-features li::before { content:'✓'; color:var(--gold); font-size:0.75rem; }
+  .btn-apply { display:inline-block; background:var(--gold); color:var(--navy); padding:0.7rem 1.8rem; border-radius:2px; font-size:0.85rem; font-weight:500; text-decoration:none; letter-spacing:0.06em; transition:background 0.2s; }
+  .btn-apply:hover { background:var(--gold-light); }
+  .btn-ghost { display:inline-block; border:1px solid rgba(201,168,76,0.3); color:var(--gold); padding:0.7rem 1.8rem; border-radius:2px; font-size:0.85rem; text-decoration:none; letter-spacing:0.06em; transition:all 0.2s; }
+  .btn-ghost:hover { border-color:var(--gold); }
+
+  /* EMI CALCULATOR */
+  .calc-wrapper { background:var(--mid); border:1px solid rgba(201,168,76,0.15); border-radius:4px; padding:3rem; }
+  .calc-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start; }
+  .calc-inputs { display:flex; flex-direction:column; gap:2rem; }
+  .input-group label { display:block; font-size:0.8rem; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; margin-bottom:0.7rem; }
+  .input-row { display:flex; align-items:center; gap:1rem; }
+  .input-row input[type=range] { flex:1; -webkit-appearance:none; height:3px; background:rgba(201,168,76,0.2); border-radius:2px; outline:none; }
+  .input-row input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; background:var(--gold); border-radius:50%; cursor:pointer; }
+  .input-value { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--gold); min-width:90px; text-align:right; font-weight:700; }
+  .calc-result { display:flex; flex-direction:column; gap:1.5rem; }
+  .result-main { text-align:center; padding:2rem; background:rgba(201,168,76,0.05); border:1px solid rgba(201,168,76,0.15); border-radius:4px; }
+  .result-label { font-size:0.8rem; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; margin-bottom:0.5rem; }
+  .result-amount { font-family:'Playfair Display',serif; font-size:3rem; font-weight:700; color:var(--gold); }
+  .result-sub { font-size:0.8rem; color:var(--muted); margin-top:0.3rem; }
+  .result-breakdown { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .breakdown-item { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:4px; padding:1rem; text-align:center; }
+  .breakdown-label { font-size:0.75rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:0.3rem; }
+  .breakdown-value { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--white); font-weight:700; }
+  .pie-wrap { display:flex; align-items:center; gap:1.5rem; }
+  svg.pie { flex-shrink:0; }
+  .pie-legend { display:flex; flex-direction:column; gap:0.6rem; }
+  .legend-item { display:flex; align-items:center; gap:0.6rem; font-size:0.8rem; color:var(--muted); }
+  .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .apply-section { text-align:center; margin-top:1.5rem; }
+
+  footer { background:#060e1a; padding:3rem 4rem; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(201,168,76,0.1); }
+  .footer-logo { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--gold); }
+  .footer-links { display:flex; gap:2rem; list-style:none; }
+  .footer-links a { color:var(--muted); text-decoration:none; font-size:0.85rem; transition:color 0.2s; }
+  .footer-links a:hover { color:var(--gold); }
+  .footer-copy { color:var(--muted); font-size:0.8rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Nexus<span>Bank</span></div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="loans.html" class="active">Loans</a></li>
+    <li><a href="investments.html">Investments</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Apply Now</a>
+</nav>
+
+<div class="page-hero">
+  <div class="breadcrumb"><a href="index.html">Home</a> / Loans</div>
+  <h1 class="page-title">Loans & <em>Credit</em></h1>
+  <p class="page-sub">Competitive rates, fast approvals, and flexible repayment plans. Get the funds you need — on your terms.</p>
+</div>
+
+<section class="section">
+  <div class="section-label">Loan products</div>
+  <div class="section-title">Find the right loan</div>
+  <div class="loan-grid">
+    <div class="loan-card featured">
+      <div class="loan-type">Home Loan</div>
+      <div class="loan-name">Dream Home Loan</div>
+      <div class="loan-rate">8.50% <span>p.a. onwards</span></div>
+      <div class="loan-meta">
+        <div class="meta-item"><strong>Up to ₹5 Cr</strong>Loan amount</div>
+        <div class="meta-item"><strong>30 years</strong>Max tenure</div>
+        <div class="meta-item"><strong>3 days</strong>Approval time</div>
+      </div>
+      <p class="loan-desc">Finance your dream home with our low-rate home loans — applicable for purchase, construction, or renovation.</p>
+      <ul class="loan-features">
+        <li>Doorstep document collection</li>
+        <li>Pre-approved for salary account holders</li>
+        <li>Balance transfer from other banks</li>
+        <li>Top-up loan facility</li>
+      </ul>
+      <a href="contact.html" class="btn-apply">Apply Now</a>
+    </div>
+    <div class="loan-card">
+      <div class="loan-type">Personal Loan</div>
+      <div class="loan-name">Instant Personal Loan</div>
+      <div class="loan-rate">10.99% <span>p.a. onwards</span></div>
+      <div class="loan-meta">
+        <div class="meta-item"><strong>Up to ₹40L</strong>Loan amount</div>
+        <div class="meta-item"><strong>5 years</strong>Max tenure</div>
+        <div class="meta-item"><strong>24 hours</strong>Approval time</div>
+      </div>
+      <p class="loan-desc">No collateral needed. Get instant approval for medical, travel, wedding, or any personal need.</p>
+      <ul class="loan-features">
+        <li>No collateral / guarantor</li>
+        <li>Instant disbursal to account</li>
+        <li>Prepayment after 12 months free</li>
+      </ul>
+      <a href="contact.html" class="btn-ghost">Apply Now</a>
+    </div>
+    <div class="loan-card">
+      <div class="loan-type">Vehicle Loan</div>
+      <div class="loan-name">Car & Two-Wheeler Loan</div>
+      <div class="loan-rate">7.75% <span>p.a. onwards</span></div>
+      <div class="loan-meta">
+        <div class="meta-item"><strong>Up to ₹1 Cr</strong>Loan amount</div>
+        <div class="meta-item"><strong>7 years</strong>Max tenure</div>
+        <div class="meta-item"><strong>Same day</strong>Approval</div>
+      </div>
+      <p class="loan-desc">New or used vehicles — get up to 100% on-road funding with flexible EMIs.</p>
+      <ul class="loan-features">
+        <li>Up to 100% on-road price</li>
+        <li>Used car loans up to 5 years old</li>
+        <li>EV-friendly rates available</li>
+      </ul>
+      <a href="contact.html" class="btn-ghost">Apply Now</a>
+    </div>
+    <div class="loan-card">
+      <div class="loan-type">Education Loan</div>
+      <div class="loan-name">Education Loan</div>
+      <div class="loan-rate">9.25% <span>p.a. onwards</span></div>
+      <div class="loan-meta">
+        <div class="meta-item"><strong>Up to ₹1.5 Cr</strong>Loan amount</div>
+        <div class="meta-item"><strong>15 years</strong>Max tenure</div>
+        <div class="meta-item"><strong>India & abroad</strong></div>
+      </div>
+      <p class="loan-desc">Invest in your future — covers tuition, living, travel, and study materials for Indian and foreign universities.</p>
+      <ul class="loan-features">
+        <li>Moratorium during study period</li>
+        <li>Tax benefit under 80E</li>
+        <li>Covers top 200 global universities</li>
+      </ul>
+      <a href="contact.html" class="btn-ghost">Apply Now</a>
+    </div>
+    <div class="loan-card">
+      <div class="loan-type">Business Loan</div>
+      <div class="loan-name">SME Business Loan</div>
+      <div class="loan-rate">12.00% <span>p.a. onwards</span></div>
+      <div class="loan-meta">
+        <div class="meta-item"><strong>Up to ₹5 Cr</strong>Loan amount</div>
+        <div class="meta-item"><strong>5 years</strong>Max tenure</div>
+        <div class="meta-item"><strong>72 hours</strong>Disbursal</div>
+      </div>
+      <p class="loan-desc">Fuel your business growth — working capital, equipment purchase, or expansion finance.</p>
+      <ul class="loan-features">
+        <li>Unsecured up to ₹50L</li>
+        <li>GST-linked credit assessment</li>
+        <li>Overdraft & term loan options</li>
+      </ul>
+      <a href="contact.html" class="btn-ghost">Apply Now</a>
+    </div>
+    <div class="loan-card">
+      <div class="loan-type">Gold Loan</div>
+      <div class="loan-name">Instant Gold Loan</div>
+      <div class="loan-rate">9.00% <span>p.a. onwards</span></div>
+      <div class="loan-meta">
+        <div class="meta-item"><strong>Up to ₹50L</strong>Loan amount</div>
+        <div class="meta-item"><strong>3 years</strong>Max tenure</div>
+        <div class="meta-item"><strong>30 minutes</strong>Disbursal</div>
+      </div>
+      <p class="loan-desc">Unlock value from your gold instantly — with the highest LTV ratio and zero processing fees.</p>
+      <ul class="loan-features">
+        <li>Up to 75% of gold value</li>
+        <li>Zero processing fee</li>
+        <li>Bullet repayment option</li>
+      </ul>
+      <a href="contact.html" class="btn-ghost">Apply Now</a>
+    </div>
+  </div>
+
+  <!-- EMI CALCULATOR -->
+  <div class="section-label">Tools</div>
+  <div class="section-title">EMI Calculator</div>
+  <div class="calc-wrapper">
+    <div class="calc-grid">
+      <div class="calc-inputs">
+        <div class="input-group">
+          <label>Loan Amount</label>
+          <div class="input-row">
+            <input type="range" id="amount" min="100000" max="10000000" step="50000" value="2000000" oninput="calc()">
+            <div class="input-value" id="amountVal">₹20L</div>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Interest Rate (% p.a.)</label>
+          <div class="input-row">
+            <input type="range" id="rate" min="6" max="20" step="0.25" value="8.5" oninput="calc()">
+            <div class="input-value" id="rateVal">8.50%</div>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Loan Tenure</label>
+          <div class="input-row">
+            <input type="range" id="tenure" min="1" max="30" step="1" value="20" oninput="calc()">
+            <div class="input-value" id="tenureVal">20 yrs</div>
+          </div>
+        </div>
+        <div style="margin-top:0.5rem;">
+          <a href="contact.html" class="btn-apply">Apply for this Loan →</a>
+        </div>
+      </div>
+      <div class="calc-result">
+        <div class="result-main">
+          <div class="result-label">Monthly EMI</div>
+          <div class="result-amount" id="emi">₹17,356</div>
+          <div class="result-sub">for 240 months</div>
+        </div>
+        <div class="result-breakdown">
+          <div class="breakdown-item">
+            <div class="breakdown-label">Principal</div>
+            <div class="breakdown-value" id="principal">₹20.0L</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-label">Total Interest</div>
+            <div class="breakdown-value" id="interest">₹21.7L</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-label">Total Amount</div>
+            <div class="breakdown-value" id="total">₹41.7L</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-label">Interest %</div>
+            <div class="breakdown-value" id="intpct">52%</div>
+          </div>
+        </div>
+        <div class="pie-wrap">
+          <svg class="pie" width="90" height="90" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.91549431" fill="transparent" stroke="rgba(201,168,76,0.15)" stroke-width="4"/>
+            <circle id="pieArc" cx="18" cy="18" r="15.91549431" fill="transparent" stroke="#c9a84c" stroke-width="4" stroke-dasharray="52 48" stroke-dashoffset="25" transform="rotate(-90 18 18)"/>
+          </svg>
+          <div class="pie-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>Interest: <span id="legendInt" style="color:var(--white);margin-left:4px;">52%</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:rgba(201,168,76,0.2)"></div>Principal: <span id="legendPrin" style="color:var(--white);margin-left:4px;">48%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">NexusBank</div>
+  <ul class="footer-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="loans.html">Loans</a></li>
+    <li><a href="investments.html">Investments</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2025 NexusBank. All rights reserved.</div>
+</footer>
+
+<script>
+function fmt(n) {
+  if(n>=10000000) return '₹'+(n/10000000).toFixed(1)+'Cr';
+  if(n>=100000) return '₹'+(n/100000).toFixed(1)+'L';
+  return '₹'+n.toLocaleString('en-IN');
+}
+function calc() {
+  const P = +document.getElementById('amount').value;
+  const r = +document.getElementById('rate').value / 12 / 100;
+  const n = +document.getElementById('tenure').value * 12;
+  document.getElementById('amountVal').textContent = fmt(P);
+  document.getElementById('rateVal').textContent = (+document.getElementById('rate').value).toFixed(2)+'%';
+  document.getElementById('tenureVal').textContent = document.getElementById('tenure').value+' yrs';
+  const emi = P * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1);
+  const totalAmt = emi * n;
+  const totalInt = totalAmt - P;
+  const intPct = Math.round(totalInt/totalAmt*100);
+  const prinPct = 100 - intPct;
+  document.getElementById('emi').textContent = '₹'+Math.round(emi).toLocaleString('en-IN');
+  document.getElementById('principal').textContent = fmt(P);
+  document.getElementById('interest').textContent = fmt(Math.round(totalInt));
+  document.getElementById('total').textContent = fmt(Math.round(totalAmt));
+  document.getElementById('intpct').textContent = intPct+'%';
+  document.getElementById('legendInt').textContent = intPct+'%';
+  document.getElementById('legendPrin').textContent = prinPct+'%';
+  document.querySelector('.result-sub').textContent = 'for '+n+' months';
+  document.getElementById('pieArc').setAttribute('stroke-dasharray', intPct+' '+(100-intPct));
+}
+calc();
+</script>
+</body>
+</html>

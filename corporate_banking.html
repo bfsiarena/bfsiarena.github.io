@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corporate Banking — Command Centre</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0a0f1e;
+    --ink-mid: #1c2340;
+    --ink-soft: #2e3a5c;
+    --slate: #3d4f7a;
+    --steel: #6b7fa8;
+    --mist: #b8c4dc;
+    --fog: #dce4f0;
+    --paper: #f4f6fb;
+    --white: #ffffff;
+    --gold: #c9a84c;
+    --gold-lt: #e8c97a;
+    --green: #1aad6e;
+    --green-lt: #d1f5e5;
+    --red: #d94f4f;
+    --red-lt: #fde8e8;
+    --amber: #e8932a;
+    --amber-lt: #fdf0dc;
+    --accent: #1257e0;
+    --accent-lt: #dde9ff;
+    --border: rgba(59,80,130,0.15);
+    --shadow: 0 2px 12px rgba(10,15,30,0.10);
+    --shadow-lg: 0 8px 40px rgba(10,15,30,0.14);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed; left: 0; top: 0; bottom: 0;
+    width: 240px;
+    background: var(--ink);
+    display: flex; flex-direction: column;
+    z-index: 100;
+    transition: width .3s ease;
+  }
+  .sidebar-logo {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+  }
+  .logo-mark {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--white);
+    letter-spacing: -.3px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo-mark span {
+    display: inline-block;
+    width: 34px; height: 34px;
+    background: var(--gold);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+  .logo-sub {
+    font-size: 10px;
+    color: var(--steel);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .nav-section {
+    padding: 16px 0 8px;
+    flex: 1;
+    overflow-y: auto;
+  }
+  .nav-label {
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--slate);
+    padding: 8px 24px 4px;
+    font-family: 'DM Mono', monospace;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 24px;
+    cursor: pointer;
+    color: var(--mist);
+    font-size: 13.5px;
+    font-weight: 400;
+    border-left: 3px solid transparent;
+    transition: all .18s ease;
+    user-select: none;
+  }
+  .nav-item:hover { background: rgba(255,255,255,.05); color: var(--white); }
+  .nav-item.active {
+    background: rgba(18,87,224,.18);
+    color: var(--white);
+    border-left-color: var(--gold);
+    font-weight: 500;
+  }
+  .nav-item .nav-icon {
+    width: 18px; height: 18px; opacity: .7; flex-shrink: 0;
+  }
+  .nav-item.active .nav-icon { opacity: 1; }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--red);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 1px 6px;
+    font-family: 'DM Mono', monospace;
+  }
+  .nav-badge.green { background: var(--green); }
+  .nav-badge.gold { background: var(--gold); color: var(--ink); }
+
+  .sidebar-footer {
+    padding: 16px 24px;
+    border-top: 1px solid rgba(255,255,255,.07);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--gold));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; color: white;
+    flex-shrink: 0;
+  }
+  .user-info { flex: 1; overflow: hidden; }
+  .user-name { font-size: 12.5px; font-weight: 500; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-role { font-size: 10px; color: var(--steel); font-family: 'DM Mono', monospace; }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: 240px;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 64px;
+    display: flex; align-items: center; gap: 16px;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-breadcrumb {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--steel);
+  }
+  .topbar-breadcrumb strong { color: var(--ink); font-weight: 600; }
+  .topbar-sep { color: var(--mist); }
+  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+
+  .icon-btn {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all .15s;
+    position: relative;
+  }
+  .icon-btn:hover { background: var(--fog); border-color: var(--mist); }
+  .icon-btn .dot {
+    position: absolute; top: 6px; right: 6px;
+    width: 7px; height: 7px;
+    background: var(--red);
+    border-radius: 50%;
+    border: 2px solid var(--white);
+  }
+
+  .entity-pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--ink);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    font-family: 'DM Mono', monospace;
+    cursor: pointer;
+  }
+
+  /* ── CONTENT ── */
+  .content {
+    padding: 32px;
+    flex: 1;
+  }
+
+  /* PAGE VISIBILITY */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px; color: var(--ink); line-height: 1.15;
+  }
+  .section-sub { font-size: 13px; color: var(--steel); margin-top: 4px; }
+
+  /* ── STAT CARDS ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    cursor: pointer;
+    transition: all .2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .stat-card.blue::before { background: var(--accent); }
+  .stat-card.gold::before { background: var(--gold); }
+  .stat-card.green::before { background: var(--green); }
+  .stat-card.red::before { background: var(--red); }
+  .stat-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+  .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--steel); font-family: 'DM Mono', monospace; margin-bottom: 8px; }
+  .stat-value { font-size: 26px; font-weight: 600; color: var(--ink); letter-spacing: -1px; font-family: 'DM Serif Display', serif; }
+  .stat-value sub { font-size: 14px; font-family: 'DM Sans', sans-serif; font-weight: 400; vertical-align: middle; color: var(--slate); }
+  .stat-change { font-size: 11.5px; margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+  .stat-change.up { color: var(--green); }
+  .stat-change.down { color: var(--red); }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .card-head {
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .card-body { padding: 0; }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    padding: 10px 20px;
+    text-align: left;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--steel);
+    background: var(--paper);
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background .12s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--paper); }
+  tbody td { padding: 13px 20px; font-size: 13px; color: var(--ink-mid); }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px; font-weight: 500;
+    font-family: 'DM Mono', monospace;
+  }
+  .badge.green { background: var(--green-lt); color: #0e7a4e; }
+  .badge.red { background: var(--red-lt); color: #a33; }
+  .badge.amber { background: var(--amber-lt); color: #9a5a10; }
+  .badge.blue { background: var(--accent-lt); color: #1044b0; }
+  .badge.slate { background: var(--fog); color: var(--slate); }
+
+  /* ── BTN ── */
+  .btn {
+    padding: 9px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 13px; font-weight: 500;
+    cursor: pointer; border: none;
+    transition: all .15s;
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: #0d48c9; }
+  .btn-secondary { background: var(--paper); color: var(--ink); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--fog); }
+  .btn-gold { background: var(--gold); color: var(--ink); font-weight: 600; }
+  .btn-gold:hover { background: var(--gold-lt); }
+  .btn-danger { background: var(--red-lt); color: var(--red); border: 1px solid #f5c6c6; }
+  .btn-sm { padding: 6px 13px; font-size: 12px; }
+
+  /* ── TWO COL ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  /* ── ACCOUNT ROW ── */
+  .account-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer; transition: background .12s;
+  }
+  .account-row:last-child { border-bottom: none; }
+  .account-row:hover { background: var(--paper); }
+  .acc-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .acc-info { flex: 1; }
+  .acc-name { font-size: 13.5px; font-weight: 500; color: var(--ink); }
+  .acc-num { font-size: 11px; color: var(--steel); font-family: 'DM Mono', monospace; margin-top: 2px; }
+  .acc-bal { text-align: right; }
+  .acc-amount { font-size: 15px; font-weight: 600; color: var(--ink); font-family: 'DM Serif Display', serif; }
+  .acc-ccy { font-size: 10.5px; color: var(--steel); font-family: 'DM Mono', monospace; }
+
+  /* ── PROGRESS ── */
+  .progress-bar { height: 6px; background: var(--fog); border-radius: 3px; overflow: hidden; margin-top: 6px; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+
+  /* ── FEATURE TILES ── */
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+  .feature-tile {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex; flex-direction: column; gap: 10px;
+    position: relative; overflow: hidden;
+  }
+  .feature-tile:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: var(--accent); }
+  .feature-tile:hover .tile-arrow { opacity: 1; transform: translate(0,0); }
+  .tile-icon {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .tile-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .tile-desc { font-size: 12px; color: var(--steel); line-height: 1.5; }
+  .tile-arrow {
+    position: absolute; top: 18px; right: 18px;
+    font-size: 16px; color: var(--accent);
+    opacity: 0; transform: translate(-4px, 4px);
+    transition: all .18s;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline { padding: 4px 20px; }
+  .tl-item { display: flex; gap: 16px; padding: 12px 0; position: relative; }
+  .tl-item::before { content: ''; position: absolute; left: 19px; top: 32px; bottom: -4px; width: 1px; background: var(--border); }
+  .tl-item:last-child::before { display: none; }
+  .tl-dot { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+  .tl-dot.green { background: var(--green-lt); color: var(--green); }
+  .tl-dot.amber { background: var(--amber-lt); color: var(--amber); }
+  .tl-dot.blue { background: var(--accent-lt); color: var(--accent); }
+  .tl-dot.red { background: var(--red-lt); color: var(--red); }
+  .tl-info .tl-title { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .tl-info .tl-meta { font-size: 11.5px; color: var(--steel); margin-top: 3px; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(10,15,30,.55);
+    backdrop-filter: blur(3px);
+    z-index: 200; align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 16px;
+    width: 520px; max-width: 95vw;
+    box-shadow: var(--shadow-lg);
+    animation: modalIn .22s ease;
+    overflow: hidden;
+  }
+  @keyframes modalIn { from { opacity:0; transform: scale(.94) translateY(12px); } to { opacity:1; transform: none; } }
+  .modal-head {
+    padding: 22px 26px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--ink); }
+  .modal-close { cursor: pointer; font-size: 20px; color: var(--steel); line-height: 1; }
+  .modal-close:hover { color: var(--ink); }
+  .modal-body { padding: 22px 26px; }
+  .modal-foot { padding: 16px 26px; background: var(--paper); display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border); }
+
+  /* ── FORM ── */
+  .form-row { margin-bottom: 16px; }
+  .form-label { font-size: 11.5px; font-weight: 500; color: var(--slate); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; display: block; }
+  .form-input, .form-select {
+    width: 100%; padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13.5px; color: var(--ink);
+    background: var(--paper);
+    font-family: 'DM Sans', sans-serif;
+    transition: border .15s;
+    outline: none;
+  }
+  .form-input:focus, .form-select:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(18,87,224,.1); }
+  .two-input { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* ── CHART PLACEHOLDER ── */
+  .chart-area {
+    padding: 20px 22px;
+    display: flex; align-items: flex-end; gap: 6px;
+    height: 130px;
+  }
+  .chart-bar {
+    flex: 1; border-radius: 4px 4px 0 0;
+    background: var(--accent-lt);
+    transition: all .3s ease;
+    cursor: pointer;
+    position: relative;
+  }
+  .chart-bar.active, .chart-bar:hover { background: var(--accent); }
+  .chart-bar::after {
+    content: attr(data-label);
+    position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%);
+    font-size: 9px; color: var(--steel); font-family: 'DM Mono', monospace;
+    white-space: nowrap;
+  }
+
+  /* ── DONUT PLACEHOLDER ── */
+  .donut-wrap { display: flex; align-items: center; gap: 24px; padding: 20px 22px; }
+  .donut-svg { width: 90px; height: 90px; flex-shrink: 0; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink); margin-bottom: 6px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 28px; right: 28px;
+    background: var(--ink);
+    color: white;
+    padding: 13px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: var(--shadow-lg);
+    z-index: 999;
+    transform: translateY(80px); opacity: 0;
+    transition: all .25s ease;
+    max-width: 320px;
+  }
+  .toast.show { transform: none; opacity: 1; }
+  .toast-icon { font-size: 16px; }
+
+  /* ── APPROVAL CARD ── */
+  .approval-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    background: var(--white);
+    cursor: pointer; transition: all .15s;
+  }
+  .approval-card:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+  .approval-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .approval-id { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--steel); }
+  .approval-amount { font-size: 17px; font-weight: 600; color: var(--ink); font-family: 'DM Serif Display', serif; }
+  .approval-desc { font-size: 12.5px; color: var(--ink-mid); margin-bottom: 10px; }
+  .approval-actions { display: flex; gap: 8px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1200px) {
+    .stat-grid { grid-template-columns: repeat(2,1fr); }
+    .feature-grid { grid-template-columns: repeat(2,1fr); }
+    .three-col { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 900px) {
+    .sidebar { width: 200px; }
+    .main { margin-left: 200px; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+
+  /* animate in */
+  .page.active .stat-card,
+  .page.active .card,
+  .page.active .feature-tile {
+    animation: fadeUp .3s ease both;
+  }
+  .page.active .stat-card:nth-child(1) { animation-delay: .03s; }
+  .page.active .stat-card:nth-child(2) { animation-delay: .07s; }
+  .page.active .stat-card:nth-child(3) { animation-delay: .11s; }
+  .page.active .stat-card:nth-child(4) { animation-delay: .15s; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
+
+  .separator { height: 1px; background: var(--border); margin: 24px 0; }
+  .info-row { display: flex; gap: 24px; padding: 14px 22px; }
+  .info-item { flex: 1; }
+  .info-lbl { font-size: 10.5px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--steel); font-family: 'DM Mono', monospace; margin-bottom: 4px; }
+  .info-val { font-size: 14px; font-weight: 500; color: var(--ink); }
+
+  .alert-bar {
+    padding: 11px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 12.5px;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px;
+  }
+  .alert-bar.amber { background: var(--amber-lt); color: #7a4e10; border: 1px solid #f0d5a0; }
+  .alert-bar.blue { background: var(--accent-lt); color: #1044b0; border: 1px solid #b0ccff; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark"><span>◆</span> CapitalEdge</div>
+    <div class="logo-sub">Corporate Banking</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item active" onclick="showPage('dashboard',this)">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M3 4a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 9a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4zm9-9a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V4zm0 9a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/></svg>
+      Dashboard
+    </div>
+
+    <div class="nav-label">Treasury</div>
+    <div class="nav-item" onclick="showPage('accounts',this)">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/></svg>
+      Accounts & Balances
+    </div>
+    <div class="nav-item" onclick="showPage('payments',this)">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M8 5a1 1 0 100 2h5.586l-1.293 1.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L13.586 5H8zM12 15a1 1 0 100-2H6.414l1.293-1.293a1 1 0 10-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L6.414 15H12z"/></svg>
+      Payments & Transfers
+      <span class="nav-badge">3</span>
+    </div>
+    <div class="nav-item" onclick="showPage('fx',this)">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
+      FX & Hedging
+    </div>
+    <div class="nav-item" onclick="showPage('cashflow',this)">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
+      Cash Flow Forecasting
+    </div>
+
+    <div class="nav-label">Credit & Trade</div>
+    <div class="nav-item" onclick="showPage('tradeFinance',this)">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 4a1 1 0 000 2h.01L5 14H3a1 1 0 000 2h14a1 1 0 000-2h-2l1.99-8H17a1 1 0 100-2H3zm4 2h6l-1.5 6H8.5L7 6z" clip-rule="evenodd"/></svg>
+      Trade Finance
+    </div>
+    <div class="nav-item" onclick="showPage('credit',this)">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 10-2 0v3a1 1 0 102 0v-3zm2-3a1 1 0 011 1v5a1 1 0 11-2 0v-5a1 1 0 011-1zm4-1a1 1 0 10-2 0v7a1 1 0 102 0V8z" clip-rule="evenodd"/></svg>
+      Credit Facilities
+    </div>
+
+    <div class="nav-label">Controls</div>
+    <div class="nav-item" onclick="showPage('approvals',this)">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+      Approvals
+      <span class="nav-badge">5</span>
+    </div>
+    <div class="nav-item" onclick="showPage('reports',this)">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zm6 7a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-3 3a1 1 0 01-1-1v-2a1 1 0 112 0v2a1 1 0 01-1 1zm-4-1a1 1 0 000 2h1a1 1 0 000-2H6z" clip-rule="evenodd"/></svg>
+      Reports & Analytics
+    </div>
+  </div>
+  <div class="sidebar-footer">
+    <div class="avatar">SK</div>
+    <div class="user-info">
+      <div class="user-name">Suresh Kumar</div>
+      <div class="user-role">CFO · TATA CORP</div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-breadcrumb">
+      <span id="bc-page">Dashboard</span>
+    </div>
+    <div class="topbar-right">
+      <div class="entity-pill" onclick="showToast('🏢 Entity Switcher coming soon')">TATA CORP ▾</div>
+      <div class="icon-btn" onclick="showToast('🔔 You have 3 new alerts')"><span>🔔</span><span class="dot"></span></div>
+      <div class="icon-btn" onclick="showToast('⚙️ Settings panel opening...')"><span>⚙️</span></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ─── PAGE: DASHBOARD ─── -->
+    <div id="page-dashboard" class="page active">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Good morning, Suresh</div>
+          <div class="section-sub">Wednesday, 28 May 2026 — Consolidated view across 6 entities</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-payment')">＋ New Payment</button>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card blue" onclick="showPage('accounts',null)">
+          <div class="stat-label">Total Liquidity</div>
+          <div class="stat-value"><sub>₹</sub>4,218 Cr</div>
+          <div class="stat-change up">↑ 2.3% vs last month</div>
+        </div>
+        <div class="stat-card gold" onclick="showPage('tradeFinance',null)">
+          <div class="stat-label">Active LCs</div>
+          <div class="stat-value">12 <sub style="font-size:13px">open</sub></div>
+          <div class="stat-change amber" style="color:var(--amber)">→ 3 expiring this week</div>
+        </div>
+        <div class="stat-card green" onclick="showPage('payments',null)">
+          <div class="stat-label">Payments Today</div>
+          <div class="stat-value"><sub>₹</sub>386 Cr</div>
+          <div class="stat-change up">↑ 47 transactions</div>
+        </div>
+        <div class="stat-card red" onclick="showPage('approvals',null)">
+          <div class="stat-label">Pending Approvals</div>
+          <div class="stat-value">5</div>
+          <div class="stat-change down">↑ 2 high priority</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Feature Centre</div>
+            <button class="btn btn-secondary btn-sm" onclick="showToast('Opening all features...')">View all</button>
+          </div>
+          <div class="card-body" style="padding:20px;">
+            <div class="feature-grid">
+              <div class="feature-tile" onclick="showPage('payments',null)">
+                <div class="tile-icon" style="background:#dde9ff">💸</div>
+                <div class="tile-name">Payments</div>
+                <div class="tile-desc">RTGS, NEFT, IMPS & cross-border wire</div>
+                <div class="tile-arrow">→</div>
+              </div>
+              <div class="feature-tile" onclick="showPage('fx',null)">
+                <div class="tile-icon" style="background:#fdf0dc">💱</div>
+                <div class="tile-name">FX Deals</div>
+                <div class="tile-desc">Spot, forward & option hedging</div>
+                <div class="tile-arrow">→</div>
+              </div>
+              <div class="feature-tile" onclick="showPage('tradeFinance',null)">
+                <div class="tile-icon" style="background:#d1f5e5">🚢</div>
+                <div class="tile-name">Trade Finance</div>
+                <div class="tile-desc">LC issuance, BG & doc collection</div>
+                <div class="tile-arrow">→</div>
+              </div>
+              <div class="feature-tile" onclick="showPage('credit',null)">
+                <div class="tile-icon" style="background:#fde8e8">🏦</div>
+                <div class="tile-name">Credit Lines</div>
+                <div class="tile-desc">OD, CC & term loan management</div>
+                <div class="tile-arrow">→</div>
+              </div>
+              <div class="feature-tile" onclick="showPage('cashflow',null)">
+                <div class="tile-icon" style="background:#f0eaff">📊</div>
+                <div class="tile-name">Forecasting</div>
+                <div class="tile-desc">AI-powered cash flow insights</div>
+                <div class="tile-arrow">→</div>
+              </div>
+              <div class="feature-tile" onclick="showPage('reports',null)">
+                <div class="tile-icon" style="background:#e8f5fa">📋</div>
+                <div class="tile-name">Reports</div>
+                <div class="tile-desc">MIS, compliance & audit reports</div>
+                <div class="tile-arrow">→</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-head">
+              <div class="card-title">Recent Activity</div>
+              <span class="badge blue">Live</span>
+            </div>
+            <div class="card-body">
+              <div class="timeline">
+                <div class="tl-item">
+                  <div class="tl-dot green">✓</div>
+                  <div class="tl-info">
+                    <div class="tl-title">₹42 Cr RTGS to Vendor — Infra Ltd</div>
+                    <div class="tl-meta">Settled · 10:32 AM · Ref: RTG2024052801</div>
+                  </div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-dot amber">⏳</div>
+                  <div class="tl-info">
+                    <div class="tl-title">LC Amendment — USD 8,50,000</div>
+                    <div class="tl-meta">Awaiting bank confirmation · 09:15 AM</div>
+                  </div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-dot blue">↑</div>
+                  <div class="tl-info">
+                    <div class="tl-title">USD/INR Forward booked @ 83.42</div>
+                    <div class="tl-meta">Maturity 28 Aug 2026 · ₹83.42 Cr notional</div>
+                  </div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-dot red">!</div>
+                  <div class="tl-info">
+                    <div class="tl-title">Credit limit utilisation at 88%</div>
+                    <div class="tl-meta">Alert triggered · CC A/C 0023 · Review required</div>
+                  </div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-dot green">✓</div>
+                  <div class="tl-info">
+                    <div class="tl-title">Payroll batch — 2,840 employees</div>
+                    <div class="tl-meta">Processed · ₹18.4 Cr · 08:00 AM</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">Currency Exposure</div>
+            </div>
+            <div class="donut-wrap">
+              <svg class="donut-svg" viewBox="0 0 36 36">
+                <circle cx="18" cy="18" r="14" fill="none" stroke="#dde9ff" stroke-width="5"/>
+                <circle cx="18" cy="18" r="14" fill="none" stroke="#1257e0" stroke-width="5" stroke-dasharray="44 44" stroke-dashoffset="11" stroke-linecap="round"/>
+                <circle cx="18" cy="18" r="14" fill="none" stroke="#c9a84c" stroke-width="5" stroke-dasharray="22 66" stroke-dashoffset="-33" stroke-linecap="round"/>
+                <circle cx="18" cy="18" r="14" fill="none" stroke="#1aad6e" stroke-width="5" stroke-dasharray="16 72" stroke-dashoffset="-55" stroke-linecap="round"/>
+                <circle cx="18" cy="18" r="14" fill="none" stroke="#d94f4f" stroke-width="5" stroke-dasharray="6 82" stroke-dashoffset="-71" stroke-linecap="round"/>
+              </svg>
+              <div>
+                <div class="legend-item"><div class="legend-dot" style="background:#1257e0"></div>INR — 50%</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#c9a84c"></div>USD — 25%</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#1aad6e"></div>EUR — 18%</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#d94f4f"></div>GBP — 7%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PAGE: ACCOUNTS ─── -->
+    <div id="page-accounts" class="page">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Accounts & Balances</div>
+          <div class="section-sub">Consolidated across all entities</div>
+        </div>
+        <button class="btn btn-primary" onclick="showToast('Opening statement download...')">⬇ Download Statement</button>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card blue"><div class="stat-label">Current Accounts</div><div class="stat-value">₹2,140 Cr</div><div class="stat-change up">↑ 1.2%</div></div>
+        <div class="stat-card gold"><div class="stat-label">Fixed Deposits</div><div class="stat-value">₹1,620 Cr</div><div class="stat-change up">↑ 0.4%</div></div>
+        <div class="stat-card green"><div class="stat-label">EEFC / Foreign CCY</div><div class="stat-value">₹458 Cr</div><div class="stat-change up">↑ 3.1%</div></div>
+        <div class="stat-card red"><div class="stat-label">Overdrafts Used</div><div class="stat-value">₹228 Cr</div><div class="stat-change down">↑ 8.2%</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Account Summary</div><button class="btn btn-secondary btn-sm" onclick="openModal('modal-account')">+ Add Account</button></div>
+        <div class="card-body">
+          <div class="account-row" onclick="openModal('modal-account')">
+            <div class="acc-icon" style="background:#dde9ff">🏢</div>
+            <div class="acc-info"><div class="acc-name">Tata Corp — Operating Account</div><div class="acc-num">CA · HDFC · 0012 3456 7890</div></div>
+            <div class="acc-bal"><div class="acc-amount">₹842.30 Cr</div><div class="acc-ccy">INR · Available</div></div>
+          </div>
+          <div class="account-row" onclick="openModal('modal-account')">
+            <div class="acc-icon" style="background:#d1f5e5">💵</div>
+            <div class="acc-info"><div class="acc-name">EEFC Account — Exports</div><div class="acc-num">EEFC · SBI · 9988 0034 1122</div></div>
+            <div class="acc-bal"><div class="acc-amount">USD 4.8 Mn</div><div class="acc-ccy">USD · Available</div></div>
+          </div>
+          <div class="account-row" onclick="openModal('modal-account')">
+            <div class="acc-icon" style="background:#fdf0dc">🏦</div>
+            <div class="acc-info"><div class="acc-name">Cash Credit — Working Capital</div><div class="acc-num">CC · Axis Bank · 7743 0012 8800</div></div>
+            <div class="acc-bal"><div class="acc-amount">₹228 Cr</div><div class="acc-ccy">INR · Utilised of ₹260 Cr</div></div>
+          </div>
+          <div class="account-row" onclick="openModal('modal-account')">
+            <div class="acc-icon" style="background:#fde8e8">🏗</div>
+            <div class="acc-info"><div class="acc-name">Fixed Deposit Pool</div><div class="acc-num">FD Ladder · ICICI · 4 tranches</div></div>
+            <div class="acc-bal"><div class="acc-amount">₹1,620 Cr</div><div class="acc-ccy">INR · Maturing over 90–360 days</div></div>
+          </div>
+          <div class="account-row" onclick="openModal('modal-account')">
+            <div class="acc-icon" style="background:#e8f5fa">🌍</div>
+            <div class="acc-info"><div class="acc-name">Singapore Subsidiary — GBP</div><div class="acc-num">Current · DBS SG · SG-8820-2200</div></div>
+            <div class="acc-bal"><div class="acc-amount">GBP 1.2 Mn</div><div class="acc-ccy">GBP · Available</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PAGE: PAYMENTS ─── -->
+    <div id="page-payments" class="page">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Payments & Transfers</div>
+          <div class="section-sub">Domestic and cross-border payments</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-payment')">＋ Initiate Payment</button>
+      </div>
+      <div class="alert-bar amber">⚠️ 3 payments pending dual authorisation — action required before 3:00 PM cut-off</div>
+      <div class="stat-grid">
+        <div class="stat-card blue"><div class="stat-label">Today's Volume</div><div class="stat-value">₹386 Cr</div><div class="stat-change up">47 transactions</div></div>
+        <div class="stat-card gold"><div class="stat-label">Pending Auth</div><div class="stat-value">3</div><div class="stat-change down">Cut-off: 3:00 PM</div></div>
+        <div class="stat-card green"><div class="stat-label">Settled</div><div class="stat-value">44</div><div class="stat-change up">↑ 12 vs yesterday</div></div>
+        <div class="stat-card red"><div class="stat-label">Failed / Returned</div><div class="stat-value">0</div><div class="stat-change up">Clean today</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Payment Queue</div><button class="btn btn-secondary btn-sm" onclick="showToast('Filtering payments...')">⚙ Filter</button></div>
+        <div class="card-body">
+          <table>
+            <thead><tr><th>Ref No</th><th>Beneficiary</th><th>Mode</th><th>Amount</th><th>Initiated</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr onclick="openModal('modal-payment')"><td style="font-family:'DM Mono',monospace;font-size:11px">PAY2024052847</td><td>Infra Solutions Ltd</td><td><span class="badge blue">RTGS</span></td><td>₹42.00 Cr</td><td>09:12 AM</td><td><span class="badge green">Settled</span></td><td><button class="btn btn-secondary btn-sm">View</button></td></tr>
+              <tr onclick="openModal('modal-payment')"><td style="font-family:'DM Mono',monospace;font-size:11px">PAY2024052846</td><td>ABC Suppliers Pvt</td><td><span class="badge blue">NEFT</span></td><td>₹3.40 Cr</td><td>09:05 AM</td><td><span class="badge amber">Pending Auth</span></td><td><button class="btn btn-primary btn-sm">Approve</button></td></tr>
+              <tr onclick="openModal('modal-payment')"><td style="font-family:'DM Mono',monospace;font-size:11px">PAY2024052845</td><td>Employee Payroll Pool</td><td><span class="badge slate">Bulk NEFT</span></td><td>₹18.4 Cr</td><td>08:00 AM</td><td><span class="badge green">Settled</span></td><td><button class="btn btn-secondary btn-sm">View</button></td></tr>
+              <tr onclick="openModal('modal-payment')"><td style="font-family:'DM Mono',monospace;font-size:11px">PAY2024052844</td><td>Global Trade Co, UK</td><td><span class="badge gold" style="background:var(--amber-lt);color:#7a4e10">SWIFT</span></td><td>USD 8,50,000</td><td>07:30 AM</td><td><span class="badge amber">Pending Auth</span></td><td><button class="btn btn-primary btn-sm">Approve</button></td></tr>
+              <tr onclick="openModal('modal-payment')"><td style="font-family:'DM Mono',monospace;font-size:11px">PAY2024052843</td><td>Tax Authority — TDS</td><td><span class="badge blue">RTGS</span></td><td>₹6.80 Cr</td><td>Yesterday</td><td><span class="badge green">Settled</span></td><td><button class="btn btn-secondary btn-sm">View</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PAGE: FX ─── -->
+    <div id="page-fx" class="page">
+      <div class="section-header">
+        <div>
+          <div class="section-title">FX & Hedging</div>
+          <div class="section-sub">Spot deals, forwards and options</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-fx')">＋ Book FX Deal</button>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card blue"><div class="stat-label">Open Forwards</div><div class="stat-value">₹1,420 Cr</div><div class="stat-change">Notional hedged</div></div>
+        <div class="stat-card gold"><div class="stat-label">MTM P&L</div><div class="stat-value">+₹4.2 Cr</div><div class="stat-change up">↑ Favourable</div></div>
+        <div class="stat-card green"><div class="stat-label">Hedge Ratio</div><div class="stat-value">72%</div><div class="stat-change up">Policy: 60–80%</div></div>
+        <div class="stat-card red"><div class="stat-label">Maturing This Week</div><div class="stat-value">2</div><div class="stat-change down">Review required</div></div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-head"><div class="card-title">Live FX Rates</div><span class="badge green">Live</span></div>
+          <div class="card-body">
+            <table>
+              <thead><tr><th>Pair</th><th>Bid</th><th>Ask</th><th>Change</th></tr></thead>
+              <tbody>
+                <tr onclick="openModal('modal-fx')"><td><strong>USD/INR</strong></td><td>83.38</td><td>83.42</td><td style="color:var(--red)">▼ 0.08</td></tr>
+                <tr onclick="openModal('modal-fx')"><td><strong>EUR/INR</strong></td><td>90.15</td><td>90.22</td><td style="color:var(--green)">▲ 0.12</td></tr>
+                <tr onclick="openModal('modal-fx')"><td><strong>GBP/INR</strong></td><td>105.40</td><td>105.52</td><td style="color:var(--green)">▲ 0.05</td></tr>
+                <tr onclick="openModal('modal-fx')"><td><strong>JPY/INR</strong></td><td>0.5420</td><td>0.5430</td><td style="color:var(--red)">▼ 0.002</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">Active Hedges</div><button class="btn btn-secondary btn-sm" onclick="showToast('Exporting hedge report...')">Export</button></div>
+          <div class="card-body">
+            <table>
+              <thead><tr><th>Deal ID</th><th>Type</th><th>Amount</th><th>Rate</th><th>Maturity</th></tr></thead>
+              <tbody>
+                <tr onclick="openModal('modal-fx')"><td style="font-family:'DM Mono',monospace;font-size:11px">FX2024-0832</td><td><span class="badge blue">Forward</span></td><td>USD 5Mn</td><td>83.42</td><td>28 Aug</td></tr>
+                <tr onclick="openModal('modal-fx')"><td style="font-family:'DM Mono',monospace;font-size:11px">FX2024-0791</td><td><span class="badge green">Spot</span></td><td>EUR 2Mn</td><td>90.20</td><td>Settled</td></tr>
+                <tr onclick="openModal('modal-fx')"><td style="font-family:'DM Mono',monospace;font-size:11px">FX2024-0766</td><td><span class="badge amber">Option</span></td><td>GBP 1Mn</td><td>105.00</td><td>30 Jun</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PAGE: CASHFLOW ─── -->
+    <div id="page-cashflow" class="page">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Cash Flow Forecasting</div>
+          <div class="section-sub">12-week forward view with AI insights</div>
+        </div>
+        <button class="btn btn-gold" onclick="showToast('🤖 AI forecast refreshing...')">⟳ Refresh AI Forecast</button>
+      </div>
+      <div class="alert-bar blue">🤖 AI predicts a ₹120 Cr shortfall in week 7 — consider unlocking FD or drawdown</div>
+      <div class="stat-grid">
+        <div class="stat-card blue"><div class="stat-label">Opening Balance</div><div class="stat-value">₹4,218 Cr</div></div>
+        <div class="stat-card green"><div class="stat-label">Expected Inflows</div><div class="stat-value">₹840 Cr</div><div class="stat-change up">Next 30 days</div></div>
+        <div class="stat-card red"><div class="stat-label">Committed Outflows</div><div class="stat-value">₹960 Cr</div><div class="stat-change down">Next 30 days</div></div>
+        <div class="stat-card gold"><div class="stat-label">Projected Closing</div><div class="stat-value">₹4,098 Cr</div><div class="stat-change down">↓ ₹120 Cr gap</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">12-Week Cash Flow Projection</div></div>
+        <div class="chart-area" style="padding-bottom:30px">
+          <div class="chart-bar active" style="height:80%" data-label="W1"></div>
+          <div class="chart-bar" style="height:90%" data-label="W2"></div>
+          <div class="chart-bar" style="height:70%" data-label="W3"></div>
+          <div class="chart-bar" style="height:95%" data-label="W4"></div>
+          <div class="chart-bar" style="height:60%" data-label="W5"></div>
+          <div class="chart-bar" style="height:75%" data-label="W6"></div>
+          <div class="chart-bar" style="height:30%;background:var(--red-lt)" data-label="W7★"></div>
+          <div class="chart-bar" style="height:65%" data-label="W8"></div>
+          <div class="chart-bar" style="height:85%" data-label="W9"></div>
+          <div class="chart-bar" style="height:72%" data-label="W10"></div>
+          <div class="chart-bar" style="height:88%" data-label="W11"></div>
+          <div class="chart-bar" style="height:78%" data-label="W12"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PAGE: TRADE FINANCE ─── -->
+    <div id="page-tradeFinance" class="page">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Trade Finance</div>
+          <div class="section-sub">Letters of credit, bank guarantees & collections</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-lc')">＋ Apply for LC / BG</button>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card blue"><div class="stat-label">Open LCs</div><div class="stat-value">12</div><div class="stat-change">USD 42 Mn total</div></div>
+        <div class="stat-card gold"><div class="stat-label">Active BGs</div><div class="stat-value">8</div><div class="stat-change">₹180 Cr outstanding</div></div>
+        <div class="stat-card red"><div class="stat-label">Expiring (7 days)</div><div class="stat-value">3</div><div class="stat-change down">Review & renew</div></div>
+        <div class="stat-card green"><div class="stat-label">Docs in Transit</div><div class="stat-value">5</div><div class="stat-change">Awaiting acceptance</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Letter of Credit Portfolio</div></div>
+        <div class="card-body">
+          <table>
+            <thead><tr><th>LC No.</th><th>Beneficiary</th><th>Type</th><th>Amount</th><th>Expiry</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr onclick="openModal('modal-lc')"><td style="font-family:'DM Mono',monospace;font-size:11px">LC/2024/0892</td><td>Global Trade Co, UK</td><td><span class="badge blue">Sight LC</span></td><td>USD 8,50,000</td><td>15 Jun 2026</td><td><span class="badge amber">Expiring</span></td></tr>
+              <tr onclick="openModal('modal-lc')"><td style="font-family:'DM Mono',monospace;font-size:11px">LC/2024/0880</td><td>Asian Components, SG</td><td><span class="badge green">Usance 90</span></td><td>USD 12,00,000</td><td>28 Aug 2026</td><td><span class="badge green">Active</span></td></tr>
+              <tr onclick="openModal('modal-lc')"><td style="font-family:'DM Mono',monospace;font-size:11px">LC/2024/0854</td><td>Euro Machinery GmbH</td><td><span class="badge blue">Sight LC</span></td><td>EUR 5,00,000</td><td>10 Jul 2026</td><td><span class="badge green">Active</span></td></tr>
+              <tr onclick="openModal('modal-lc')"><td style="font-family:'DM Mono',monospace;font-size:11px">BG/2024/0220</td><td>NHAI — Performance</td><td><span class="badge amber">Bank Guarantee</span></td><td>₹45 Cr</td><td>31 Mar 2027</td><td><span class="badge green">Active</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PAGE: CREDIT ─── -->
+    <div id="page-credit" class="page">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Credit Facilities</div>
+          <div class="section-sub">Working capital, term loans & overdraft</div>
+        </div>
+        <button class="btn btn-secondary" onclick="showToast('Opening credit request form...')">Request Limit Enhancement</button>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card blue"><div class="stat-label">Total Sanctioned</div><div class="stat-value">₹680 Cr</div></div>
+        <div class="stat-card red"><div class="stat-label">Total Utilised</div><div class="stat-value">₹428 Cr</div><div class="stat-change down">63% drawn</div></div>
+        <div class="stat-card green"><div class="stat-label">Available Headroom</div><div class="stat-value">₹252 Cr</div><div class="stat-change up">37% free</div></div>
+        <div class="stat-card gold"><div class="stat-label">Avg Interest Rate</div><div class="stat-value">9.4%</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Credit Line Utilisation</div></div>
+        <div class="card-body" style="padding:20px 22px">
+          <div style="margin-bottom:18px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <span style="font-size:13px;font-weight:500">Cash Credit — Axis Bank</span>
+              <span style="font-size:12px;color:var(--red)">₹228 Cr / ₹260 Cr (88%)</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:88%;background:var(--red)"></div></div>
+          </div>
+          <div style="margin-bottom:18px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <span style="font-size:13px;font-weight:500">Working Capital — HDFC</span>
+              <span style="font-size:12px;color:var(--amber)">₹140 Cr / ₹200 Cr (70%)</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:70%;background:var(--amber)"></div></div>
+          </div>
+          <div style="margin-bottom:18px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <span style="font-size:13px;font-weight:500">Term Loan — SBI Infrastructure</span>
+              <span style="font-size:12px;color:var(--green)">₹60 Cr / ₹220 Cr (27%)</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:27%;background:var(--green)"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PAGE: APPROVALS ─── -->
+    <div id="page-approvals" class="page">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Pending Approvals</div>
+          <div class="section-sub">Your authorisation queue — 5 items</div>
+        </div>
+        <button class="btn btn-danger" onclick="showToast('All urgent items highlighted')">⚠ 2 High Priority</button>
+      </div>
+      <div class="two-col">
+        <div>
+          <div class="approval-card" onclick="openModal('modal-approve')">
+            <div class="approval-top"><span class="approval-id">PAY2024052846 · PAYMENT</span><span class="badge red">High Priority</span></div>
+            <div class="approval-amount">₹3.40 Cr — NEFT</div>
+            <div class="approval-desc">ABC Suppliers Pvt Ltd · Working capital payment · Initiated by Rajesh (Finance)</div>
+            <div class="approval-actions">
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();approveItem(this)">✓ Approve</button>
+              <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();rejectItem(this)">✗ Reject</button>
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();showToast('Opening supporting docs...')">Docs</button>
+            </div>
+          </div>
+          <div class="approval-card" onclick="openModal('modal-approve')">
+            <div class="approval-top"><span class="approval-id">PAY2024052844 · SWIFT</span><span class="badge red">High Priority</span></div>
+            <div class="approval-amount">USD 8,50,000 — SWIFT</div>
+            <div class="approval-desc">Global Trade Co, UK · Import payment against LC · Initiated by Priya (Treasury)</div>
+            <div class="approval-actions">
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();approveItem(this)">✓ Approve</button>
+              <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();rejectItem(this)">✗ Reject</button>
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();showToast('Opening supporting docs...')">Docs</button>
+            </div>
+          </div>
+          <div class="approval-card" onclick="openModal('modal-approve')">
+            <div class="approval-top"><span class="approval-id">FX2024-DRAFT · FX DEAL</span><span class="badge amber">Medium</span></div>
+            <div class="approval-amount">EUR 3 Mn Forward @ 90.25</div>
+            <div class="approval-desc">30-Sep maturity · Export hedging · Initiated by Treasury desk</div>
+            <div class="approval-actions">
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();approveItem(this)">✓ Approve</button>
+              <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();rejectItem(this)">✗ Reject</button>
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();showToast('Opening FX deal sheet...')">Docs</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="approval-card" onclick="openModal('modal-approve')">
+            <div class="approval-top"><span class="approval-id">LC/2024/AMEND · LC AMENDMENT</span><span class="badge amber">Medium</span></div>
+            <div class="approval-amount">LC Amendment — USD 8,50,000</div>
+            <div class="approval-desc">Extend expiry to 30 June 2026 · Beneficiary: Global Trade Co</div>
+            <div class="approval-actions">
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();approveItem(this)">✓ Approve</button>
+              <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();rejectItem(this)">✗ Reject</button>
+            </div>
+          </div>
+          <div class="approval-card" onclick="openModal('modal-approve')">
+            <div class="approval-top"><span class="approval-id">CR/2024/REQ-08 · CREDIT REQUEST</span><span class="badge slate">Normal</span></div>
+            <div class="approval-amount">₹40 Cr Limit Enhancement</div>
+            <div class="approval-desc">CC Account · Axis Bank · Board resolution attached</div>
+            <div class="approval-actions">
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();approveItem(this)">✓ Approve</button>
+              <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();rejectItem(this)">✗ Reject</button>
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();showToast('Opening credit memo...')">Docs</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PAGE: REPORTS ─── -->
+    <div id="page-reports" class="page">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Reports & Analytics</div>
+          <div class="section-sub">MIS, compliance and regulatory reports</div>
+        </div>
+        <button class="btn btn-primary" onclick="showToast('Opening report scheduler...')">⏱ Schedule Report</button>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-tile" onclick="showToast('📊 Generating Bank Position Report...')">
+          <div class="tile-icon" style="background:#dde9ff">📊</div>
+          <div class="tile-name">Bank Position Report</div>
+          <div class="tile-desc">Daily consolidated balance across all banks</div>
+          <div class="tile-arrow">↓</div>
+        </div>
+        <div class="feature-tile" onclick="showToast('📋 Generating Cash Flow MIS...')">
+          <div class="tile-icon" style="background:#d1f5e5">📋</div>
+          <div class="tile-name">Cash Flow MIS</div>
+          <div class="tile-desc">Actual vs projected cash flows</div>
+          <div class="tile-arrow">↓</div>
+        </div>
+        <div class="feature-tile" onclick="showToast('🌍 Generating FX Exposure Report...')">
+          <div class="tile-icon" style="background:#fdf0dc">🌍</div>
+          <div class="tile-name">FX Exposure</div>
+          <div class="tile-desc">Currency-wise exposure and hedge coverage</div>
+          <div class="tile-arrow">↓</div>
+        </div>
+        <div class="feature-tile" onclick="showToast('🚢 Generating Trade Finance Report...')">
+          <div class="tile-icon" style="background:#fde8e8">🚢</div>
+          <div class="tile-name">Trade Finance Report</div>
+          <div class="tile-desc">LC / BG ageing and utilisation</div>
+          <div class="tile-arrow">↓</div>
+        </div>
+        <div class="feature-tile" onclick="showToast('🔍 Generating Audit Trail...')">
+          <div class="tile-icon" style="background:#f0eaff">🔍</div>
+          <div class="tile-name">Audit Trail</div>
+          <div class="tile-desc">User actions, approvals and exceptions</div>
+          <div class="tile-arrow">↓</div>
+        </div>
+        <div class="feature-tile" onclick="showToast('📜 Generating Regulatory Report...')">
+          <div class="tile-icon" style="background:#e8f5fa">📜</div>
+          <div class="tile-name">Regulatory Reports</div>
+          <div class="tile-desc">FEMA, RBI compliance submissions</div>
+          <div class="tile-arrow">↓</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ── MODALS ── -->
+
+<!-- Payment Modal -->
+<div id="modal-payment" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Initiate Payment</div>
+      <div class="modal-close" onclick="closeModal('modal-payment')">×</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label class="form-label">Payment Mode</label>
+        <select class="form-select"><option>RTGS</option><option>NEFT</option><option>IMPS</option><option>SWIFT (International)</option><option>Bulk Upload</option></select>
+      </div>
+      <div class="two-input">
+        <div class="form-row">
+          <label class="form-label">Debit Account</label>
+          <select class="form-select"><option>CA · HDFC · 0012 3456 7890</option><option>CC · Axis · 7743 0012</option></select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Currency</label>
+          <select class="form-select"><option>INR</option><option>USD</option><option>EUR</option><option>GBP</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Beneficiary Name</label>
+        <input class="form-input" type="text" placeholder="Counterparty or vendor name">
+      </div>
+      <div class="two-input">
+        <div class="form-row">
+          <label class="form-label">Account / IBAN</label>
+          <input class="form-input" type="text" placeholder="Account number">
+        </div>
+        <div class="form-row">
+          <label class="form-label">IFSC / SWIFT BIC</label>
+          <input class="form-input" type="text" placeholder="Code">
+        </div>
+      </div>
+      <div class="two-input">
+        <div class="form-row">
+          <label class="form-label">Amount</label>
+          <input class="form-input" type="text" placeholder="0.00">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Value Date</label>
+          <input class="form-input" type="date" value="2026-05-28">
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Remarks / Narration</label>
+        <input class="form-input" type="text" placeholder="Payment purpose">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal('modal-payment')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitPayment()">Submit for Approval →</button>
+    </div>
+  </div>
+</div>
+
+<!-- FX Modal -->
+<div id="modal-fx" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Book FX Deal</div>
+      <div class="modal-close" onclick="closeModal('modal-fx')">×</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label class="form-label">Deal Type</label>
+        <select class="form-select"><option>Spot</option><option>Forward</option><option>Option — Call</option><option>Option — Put</option></select>
+      </div>
+      <div class="two-input">
+        <div class="form-row">
+          <label class="form-label">Buy Currency</label>
+          <select class="form-select"><option>USD</option><option>EUR</option><option>GBP</option><option>JPY</option><option>INR</option></select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Sell Currency</label>
+          <select class="form-select"><option>INR</option><option>USD</option><option>EUR</option></select>
+        </div>
+      </div>
+      <div class="two-input">
+        <div class="form-row">
+          <label class="form-label">Notional Amount</label>
+          <input class="form-input" type="text" placeholder="e.g. 5,000,000">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Indicative Rate</label>
+          <input class="form-input" type="text" placeholder="83.42" value="83.42">
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Maturity / Value Date</label>
+        <input class="form-input" type="date" value="2026-08-28">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Purpose / Hedge Description</label>
+        <input class="form-input" type="text" placeholder="e.g. Import hedge — Invoice #INV2024-082">
+      </div>
+      <div class="alert-bar blue" style="margin-top:4px">💡 Current mid-rate: USD/INR 83.40 · Your indicative rate is within policy band</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal('modal-fx')">Cancel</button>
+      <button class="btn btn-gold" onclick="submitFX()">Confirm & Book Deal</button>
+    </div>
+  </div>
+</div>
+
+<!-- LC Modal -->
+<div id="modal-lc" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Apply for LC / Bank Guarantee</div>
+      <div class="modal-close" onclick="closeModal('modal-lc')">×</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label class="form-label">Instrument Type</label>
+        <select class="form-select"><option>Letter of Credit — Sight</option><option>Letter of Credit — Usance</option><option>Bank Guarantee — Performance</option><option>Bank Guarantee — Financial</option></select>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Beneficiary Name & Country</label>
+        <input class="form-input" type="text" placeholder="e.g. Global Trade Co, United Kingdom">
+      </div>
+      <div class="two-input">
+        <div class="form-row">
+          <label class="form-label">Amount</label>
+          <input class="form-input" type="text" placeholder="0.00">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Currency</label>
+          <select class="form-select"><option>USD</option><option>EUR</option><option>GBP</option><option>INR</option></select>
+        </div>
+      </div>
+      <div class="two-input">
+        <div class="form-row">
+          <label class="form-label">Issue Date</label>
+          <input class="form-input" type="date" value="2026-05-28">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Expiry Date</label>
+          <input class="form-input" type="date" value="2026-08-28">
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Issuing Bank</label>
+        <select class="form-select"><option>HDFC Bank</option><option>Axis Bank</option><option>SBI</option><option>ICICI Bank</option></select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal('modal-lc')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitLC()">Submit Application →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Account Modal -->
+<div id="modal-account" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Account Details</div>
+      <div class="modal-close" onclick="closeModal('modal-account')">×</div>
+    </div>
+    <div class="modal-body">
+      <div class="info-row" style="padding:0 0 14px;gap:40px">
+        <div class="info-item"><div class="info-lbl">Account Name</div><div class="info-val">Tata Corp — Operating</div></div>
+        <div class="info-item"><div class="info-lbl">Account No.</div><div class="info-val" style="font-family:'DM Mono',monospace">0012 3456 7890</div></div>
+      </div>
+      <div class="info-row" style="padding:0 0 14px;gap:40px">
+        <div class="info-item"><div class="info-lbl">Available Balance</div><div class="info-val" style="font-size:20px;font-family:'DM Serif Display',serif">₹842.30 Cr</div></div>
+        <div class="info-item"><div class="info-lbl">Bank / Branch</div><div class="info-val">HDFC · BKC, Mumbai</div></div>
+      </div>
+      <div class="separator"></div>
+      <div class="card-title" style="margin-bottom:12px">Recent Transactions</div>
+      <table>
+        <thead><tr><th>Date</th><th>Description</th><th>Credit</th><th>Debit</th></tr></thead>
+        <tbody>
+          <tr><td>28 May</td><td>RTGS to Infra Solutions</td><td>—</td><td>₹42.00 Cr</td></tr>
+          <tr><td>28 May</td><td>Customer receipt — Zephyr</td><td>₹68.20 Cr</td><td>—</td></tr>
+          <tr><td>27 May</td><td>TDS Payment — Govt</td><td>—</td><td>₹6.80 Cr</td></tr>
+          <tr><td>27 May</td><td>Export proceeds — USD</td><td>₹41.50 Cr</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal('modal-account')">Close</button>
+      <button class="btn btn-primary" onclick="showToast('⬇ Statement downloading...'); closeModal('modal-account')">Download Statement</button>
+    </div>
+  </div>
+</div>
+
+<!-- Approve Modal -->
+<div id="modal-approve" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Approval Details</div>
+      <div class="modal-close" onclick="closeModal('modal-approve')">×</div>
+    </div>
+    <div class="modal-body">
+      <div class="alert-bar amber">⚠️ This payment requires dual authorisation. You are Approver 1 of 2.</div>
+      <div class="info-row" style="padding:12px 0;gap:40px">
+        <div class="info-item"><div class="info-lbl">Amount</div><div class="info-val" style="font-size:20px;font-family:'DM Serif Display',serif">₹3.40 Cr</div></div>
+        <div class="info-item"><div class="info-lbl">Mode</div><div class="info-val">NEFT</div></div>
+      </div>
+      <div class="info-row" style="padding:0 0 12px;gap:40px">
+        <div class="info-item"><div class="info-lbl">Beneficiary</div><div class="info-val">ABC Suppliers Pvt Ltd</div></div>
+        <div class="info-item"><div class="info-lbl">A/C No.</div><div class="info-val" style="font-family:'DM Mono',monospace">4421 8820 0012</div></div>
+      </div>
+      <div class="info-row" style="padding:0 0 12px;gap:40px">
+        <div class="info-item"><div class="info-lbl">Initiated By</div><div class="info-val">Rajesh Sharma (Finance)</div></div>
+        <div class="info-item"><div class="info-lbl">Time</div><div class="info-val">09:05 AM today</div></div>
+      </div>
+      <div class="form-row" style="margin-top:8px">
+        <label class="form-label">Remarks (optional)</label>
+        <input class="form-input" type="text" placeholder="Add approval comment...">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-danger" onclick="rejectItem(null); closeModal('modal-approve')">✗ Reject</button>
+      <button class="btn btn-primary" onclick="approveItem(null); closeModal('modal-approve')">✓ Approve Payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon">✓</span>
+  <span id="toast-msg">Action completed</span>
+</div>
+
+<script>
+  // Page navigation
+  function showPage(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const page = document.getElementById('page-' + id);
+    if (page) page.classList.add('active');
+
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    if (el) el.classList.add('active');
+    else {
+      // find by content
+      document.querySelectorAll('.nav-item').forEach(n => {
+        if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) n.classList.add('active');
+      });
+    }
+
+    const labels = {
+      dashboard: 'Dashboard', accounts: 'Accounts & Balances', payments: 'Payments & Transfers',
+      fx: 'FX & Hedging', cashflow: 'Cash Flow Forecasting', tradeFinance: 'Trade Finance',
+      credit: 'Credit Facilities', approvals: 'Approvals', reports: 'Reports & Analytics'
+    };
+    document.getElementById('bc-page').textContent = labels[id] || id;
+  }
+
+  // Modals
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.querySelectorAll('.modal-overlay').forEach(o => {
+    o.addEventListener('click', e => { if (e.target === o) { o.classList.remove('open'); document.body.style.overflow = ''; } });
+  });
+
+  // Toast
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // Actions
+  function submitPayment() {
+    closeModal('modal-payment');
+    showToast('✅ Payment submitted for dual authorisation');
+  }
+  function submitFX() {
+    closeModal('modal-fx');
+    showToast('✅ FX deal booked — confirmation sent to treasury');
+  }
+  function submitLC() {
+    closeModal('modal-lc');
+    showToast('✅ LC application submitted to HDFC Bank');
+  }
+  function approveItem(btn) {
+    if (btn) {
+      const card = btn.closest('.approval-card');
+      if (card) { card.style.opacity = '.4'; card.style.pointerEvents = 'none'; }
+    }
+    showToast('✅ Approved — pending second authoriser');
+  }
+  function rejectItem(btn) {
+    if (btn) {
+      const card = btn.closest('.approval-card');
+      if (card) { card.style.opacity = '.4'; card.style.pointerEvents = 'none'; }
+    }
+    showToast('🚫 Transaction rejected and initiator notified');
+  }
+
+  // Animate bars on cashflow page visit
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.addEventListener('click', () => {
+      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes('cashflow')) {
+        setTimeout(() => {
+          document.querySelectorAll('.chart-bar').forEach(b => {
+            const h = b.style.height; b.style.height = '0';
+            setTimeout(() => b.style.height = h, 80);
+          });
+        }, 100);
+      }
+    });
+  });
+</script>
+</body>
+</html>

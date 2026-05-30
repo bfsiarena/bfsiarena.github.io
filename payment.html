@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payments — NexusBank</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0a1628;
+      --gold: #c9a84c;
+      --gold-light: #f0d080;
+      --cream: #faf8f3;
+      --mid: #1e2d4a;
+      --muted: #8a9bb8;
+      --white: #ffffff;
+      --light-bg: #f5f8fc;
+      --accent: #1257e0;
+      --success: #1aad6e;
+      --warning: #e8932a;
+      --danger: #d94f4f;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.2rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+      background: rgba(10, 22, 40, 0.98);
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+    }
+
+    .logo span {
+      color: var(--white);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--gold);
+    }
+
+    .nav-cta {
+      background: var(--gold);
+      color: var(--navy);
+      padding: 0.55rem 1.5rem;
+      border-radius: 2px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: all 0.2s;
+    }
+
+    .nav-cta:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+    }
+
+    /* Page Hero */
+    .page-hero {
+      padding: 10rem 4rem 5rem;
+      background: linear-gradient(180deg, var(--mid) 0%, var(--navy) 100%);
+      position: relative;
+      overflow: hidden;
+      margin-top: 70px;
+    }
+
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      border: 1px solid rgba(201, 168, 76, 0.06);
+    }
+
+    .page-hero::after {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 1px solid rgba(201, 168, 76, 0.1);
+    }
+
+    .breadcrumb {
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .breadcrumb a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900;
+      margin-bottom: 1rem;
+    }
+
+    .page-title em {
+      color: var(--gold);
+      font-style: normal;
+    }
+
+    .page-sub {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 600px;
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    /* Section */
+    .section {
+      padding: 5rem 4rem;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Tabs */
+    .tab-bar {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+      margin-bottom: 3rem;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      padding: 1rem 2rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--gold);
+    }
+
+    .tab-btn.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Payment Types Grid */
+    .payment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .payment-card {
+      background: var(--mid);
+      border: 1px solid rgba(201, 168, 76, 0.1);
+      border-radius: 8px;
+      padding: 2.5rem 2rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .payment-card:hover {
+      border-color: rgba(201, 168, 76, 0.35);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(201, 168, 76, 0.1);
+    }
+
+    .payment-card.featured {
+      border-color: rgba(201, 168, 76, 0.4);
+      background: linear-gradient(135deg, var(--mid) 0%, #1a2840 100%);
+    }
+
+    .payment-badge {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 0.7rem;
+      padding: 0.3rem 0.9rem;
+      border-radius: 20px;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .payment-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .payment-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--gold);
+    }
+
+    .payment-code {
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .payment-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    .payment-feature {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    .payment-feature::before {
+      content: '✓';
+      color: var(--gold);
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .payment-details {
+      background: rgba(201, 168, 76, 0.05);
+      border-left: 3px solid var(--gold);
+      padding: 1rem;
+      margin-top: 1.5rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
+    .detail-label {
+      color: var(--gold);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+
+    .detail-value {
+      color: var(--muted);
+    }
+
+    /* Payment Form */
+    .payment-form {
+      background: var(--mid);
+      border: 1px solid rgba(201, 168, 76, 0.1);
+      border-radius: 8px;
+      padding: 3rem;
+      max-width: 700px;
+      margin: 3rem auto;
+    }
+
+    .form-group {
+      margin-bottom: 2rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.05em;
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 4px;
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    .form-input::placeholder {
+      color: var(--muted);
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .form-info {
+      background: rgba(18, 87, 224, 0.1);
+      border-left: 3px solid var(--accent);
+      padding: 1rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      background: var(--gold);
+      color: var(--navy);
+      border: none;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      width: 100%;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(201, 168, 76, 0.2);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      color: var(--gold);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(201, 168, 76, 0.1);
+      border-color: var(--gold);
+    }
+
+    /* Comparison Table */
+    .comparison-section {
+      margin-top: 4rem;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 2rem;
+      overflow-x: auto;
+    }
+
+    .compare-table th {
+      background: var(--mid);
+      padding: 1rem 1.2rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      text-transform: uppercase;
+      font-weight: 600;
+      text-align: left;
+      border-bottom: 2px solid rgba(201, 168, 76, 0.2);
+    }
+
+    .compare-table td {
+      padding: 1rem 1.2rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .compare-table tr:hover td {
+      background: rgba(201, 168, 76, 0.03);
+    }
+
+    .check {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .cross {
+      color: #666;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      margin-top: 4rem;
+    }
+
+    .faq-item {
+      background: var(--mid);
+      border: 1px solid rgba(201, 168, 76, 0.1);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .faq-question {
+      padding: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+
+    .faq-question:hover {
+      background: rgba(201, 168, 76, 0.05);
+    }
+
+    .faq-q-text {
+      font-weight: 600;
+      color: var(--gold);
+      font-size: 1rem;
+    }
+
+    .faq-icon {
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 0 1.5rem 1.5rem;
+      color: var(--muted);
+      line-height: 1.8;
+      border-top: 1px solid rgba(201, 168, 76, 0.1);
+    }
+
+    .faq-item.active .faq-answer {
+      display: block;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Info Box */
+    .info-box {
+      background: rgba(201, 168, 76, 0.08);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .info-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .info-content {
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* Footer */
+    footer {
+      background: #060e1a;
+      padding: 3rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(201, 168, 76, 0.1);
+      margin-top: 4rem;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--gold);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--gold);
+    }
+
+    .footer-copy {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem 2rem;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .page-hero {
+        padding: 6rem 2rem 4rem;
+      }
+
+      .section {
+        padding: 3rem 2rem;
+      }
+
+      .payment-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .payment-form {
+        padding: 2rem 1.5rem;
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div class="logo">Nexus<span>Bank</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="loans.html">Loans</a></li>
+      <li><a href="investments.html">Investments</a></li>
+      <li><a href="payment.html" class="active">Payments</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="contact.html" class="nav-cta">Open Account</a>
+  </nav>
+
+  <div class="page-hero">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Payments</div>
+    <h1 class="page-title">Payment <em>Solutions</em></h1>
+    <p class="page-sub">Understand different payment methods and choose the right solution for your banking needs. Fast, secure, and convenient payments tailored for you.</p>
+  </div>
+
+  <!-- Section: What is Payment in Banking? -->
+  <section class="section">
+    <div class="section-label">Understanding Banking</div>
+    <div class="section-title">What is Payment in Banking?</div>
+    <div class="section-subtitle">Learn the fundamentals of banking payments and transactions</div>
+
+    <div class="info-box">
+      <div class="info-title">📋 Definition</div>
+      <div class="info-content">
+        In banking, a <strong>payment</strong> is the transfer of money or value from one account to another, typically from a payer (sender) to a payee (receiver). Payments can be made domestically or internationally, and they form the backbone of modern financial transactions.
+      </div>
+    </div>
+
+    <div class="payment-grid">
+      <div class="info-box" style="background: rgba(26, 173, 110, 0.08); border-color: rgba(26, 173, 110, 0.2);">
+        <div class="info-title">🎯 Key Characteristics</div>
+        <div class="info-content">
+          • <strong>Authenticated:</strong> Verified identity of both parties<br>
+          • <strong>Secure:</strong> Multiple layers of encryption & protection<br>
+          • <strong>Traceable:</strong> Complete audit trail & reference numbers<br>
+          • <strong>Reversible:</strong> Dispute resolution mechanisms<br>
+          • <strong>Instant or Scheduled:</strong> Real-time or future-dated payments
+        </div>
+      </div>
+
+      <div class="info-box" style="background: rgba(232, 147, 42, 0.08); border-color: rgba(232, 147, 42, 0.2);">
+        <div class="info-title">🔄 Payment Flow</div>
+        <div class="info-content">
+          <strong>1. Initiation:</strong> Payer submits payment request<br>
+          <strong>2. Authorization:</strong> Bank verifies sender & funds<br>
+          <strong>3. Processing:</strong> Transaction is routed & cleared<br>
+          <strong>4. Settlement:</strong> Funds transferred to beneficiary<br>
+          <strong>5. Confirmation:</strong> Receipt & transaction reference provided
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Payment Types -->
+  <section class="section">
+    <div class="section-label">Payment Methods</div>
+    <div class="section-title">Types of Bank <em>Payments</em></div>
+    <div class="section-subtitle">Explore different payment systems available in modern banking</div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="showTab('domestic')">Domestic Payments</button>
+      <button class="tab-btn" onclick="showTab('international')">International Payments</button>
+      <button class="tab-btn" onclick="showTab('digital')">Digital Payments</button>
+      <button class="tab-btn" onclick="showTab('specialized')">Specialized Payments</button>
+    </div>
+
+    <!-- Domestic Payments Tab -->
+    <div id="domestic" class="tab-content active">
+      <div class="payment-grid">
+        <!-- NEFT -->
+        <div class="payment-card">
+          <div class="payment-badge">DOMESTIC</div>
+          <div class="payment-icon">🏦</div>
+          <div class="payment-name">NEFT</div>
+          <div class="payment-code">National Electronic Funds Transfer</div>
+          <div class="payment-desc">Safe and secure bank-to-bank fund transfer across India with batch processing.</div>
+          <div class="payment-feature">Fund transfer to any bank</div>
+          <div class="payment-feature">Settlement in batches (half-hourly)</div>
+          <div class="payment-feature">Low transaction cost</div>
+          <div class="payment-feature">Suitable for regular transfers</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Settlement Time</div>
+            <div class="detail-value">1-2 hours (same day)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">₹2.50 - ₹25 (based on amount)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">Regular payments, vendor payments, regular transfers</div>
+          </div>
+        </div>
+
+        <!-- RTGS -->
+        <div class="payment-card">
+          <div class="payment-badge">FAST</div>
+          <div class="payment-icon">⚡</div>
+          <div class="payment-name">RTGS</div>
+          <div class="payment-code">Real-Time Gross Settlement</div>
+          <div class="payment-desc">Instantaneous high-value fund transfer across India with real-time clearing.</div>
+          <div class="payment-feature">Real-time settlement</div>
+          <div class="payment-feature">For payments above ₹2 lakhs</div>
+          <div class="payment-feature">Individual processing</div>
+          <div class="payment-feature">Guaranteed credit</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Settlement Time</div>
+            <div class="detail-value">Instant (2-30 minutes)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">₹25 - ₹100 (based on amount)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">Urgent payments, high-value transfers, emergency funds</div>
+          </div>
+        </div>
+
+        <!-- IMPS -->
+        <div class="payment-card featured">
+          <div class="payment-badge">INSTANT</div>
+          <div class="payment-icon">📱</div>
+          <div class="payment-name">IMPS</div>
+          <div class="payment-code">Immediate Payment Service</div>
+          <div class="payment-desc">24/7 real-time fund transfer service for instant money movement, even on holidays.</div>
+          <div class="payment-feature">Available 24/7 & holidays</div>
+          <div class="payment-feature">Instant settlement</div>
+          <div class="payment-feature">Via mobile/net banking</div>
+          <div class="payment-feature">Support for repeated transfers</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Settlement Time</div>
+            <div class="detail-value">Instant (15-30 seconds)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">₹0 - ₹10 (usually free)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">Peer-to-peer transfers, urgent small amounts, daily transactions</div>
+          </div>
+        </div>
+
+        <!-- Cheque -->
+        <div class="payment-card">
+          <div class="payment-badge">TRADITIONAL</div>
+          <div class="payment-icon">📄</div>
+          <div class="payment-name">Cheque Payment</div>
+          <div class="payment-code">Paper-based Fund Transfer</div>
+          <div class="payment-desc">Traditional method of fund transfer using cheque books with clearing process.</div>
+          <div class="payment-feature">Widely accepted</div>
+          <div class="payment-feature">Written proof of authorization</div>
+          <div class="payment-feature">Can be post-dated</div>
+          <div class="payment-feature">Cross-checking available</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Settlement Time</div>
+            <div class="detail-value">3-5 business days</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">No charge (free)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">Large payments, scheduled payments, formal transactions</div>
+          </div>
+        </div>
+
+        <!-- UPI -->
+        <div class="payment-card">
+          <div class="payment-badge">MODERN</div>
+          <div class="payment-icon">💳</div>
+          <div class="payment-name">UPI</div>
+          <div class="payment-code">Unified Payments Interface</div>
+          <div class="payment-desc">Simple, fast, and secure payment system using mobile number or ID handle.</div>
+          <div class="payment-feature">Mobile-first payments</div>
+          <div class="payment-feature">Uses unique ID handle</div>
+          <div class="payment-feature">Instant settlement</div>
+          <div class="payment-feature">Works 24/7</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Settlement Time</div>
+            <div class="detail-value">Instant (5-10 seconds)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">No charge (free)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">Retail payments, peer-to-peer, QR code payments</div>
+          </div>
+        </div>
+
+        <!-- Demand Draft -->
+        <div class="payment-card">
+          <div class="payment-badge">SECURED</div>
+          <div class="payment-icon">🔐</div>
+          <div class="payment-name">Demand Draft</div>
+          <div class="payment-code">Bank-guaranteed Payment Instrument</div>
+          <div class="payment-desc">Secure payment method issued by bank guaranteeing payment to bearer on demand.</div>
+          <div class="payment-feature">Bank-guaranteed payment</div>
+          <div class="payment-feature">Cannot bounce</div>
+          <div class="payment-feature">Physical document</div>
+          <div class="payment-feature">High security</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Settlement Time</div>
+            <div class="detail-value">2-3 business days</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">₹50 - ₹200</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">High-value payments, legal transactions, real estate deals</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- International Payments Tab -->
+    <div id="international" class="tab-content">
+      <div class="payment-grid">
+        <!-- SWIFT -->
+        <div class="payment-card featured">
+          <div class="payment-badge">INTERNATIONAL</div>
+          <div class="payment-icon">🌍</div>
+          <div class="payment-name">SWIFT / Wire Transfer</div>
+          <div class="payment-code">Society for Worldwide Interbank Financial Telecommunication</div>
+          <div class="payment-desc">Global standard for international bank-to-bank transfers with complete traceability.</div>
+          <div class="payment-feature">Worldwide coverage</div>
+          <div class="payment-feature">Multiple currency support</div>
+          <div class="payment-feature">Complete documentation</div>
+          <div class="payment-feature">High security standards</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Settlement Time</div>
+            <div class="detail-value">1-3 business days</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">₹500 - ₹2,500+ (based on amount)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">International remittances, cross-border payments, business transactions</div>
+          </div>
+        </div>
+
+        <!-- Foreign Remittance -->
+        <div class="payment-card">
+          <div class="payment-badge">OVERSEAS</div>
+          <div class="payment-icon">💰</div>
+          <div class="payment-name">Foreign Remittance</div>
+          <div class="payment-code">Overseas Fund Transfer Service</div>
+          <div class="payment-desc">Specialized service for sending money abroad with competitive exchange rates.</div>
+          <div class="payment-feature">Multiple destination countries</div>
+          <div class="payment-feature">Competitive forex rates</div>
+          <div class="payment-feature">Various receiving options</div>
+          <div class="payment-feature">Fast processing</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Settlement Time</div>
+            <div class="detail-value">2-5 business days</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">₹250 - ₹1,500 + forex charges</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">Personal remittances, family transfers, student payments abroad</div>
+          </div>
+        </div>
+
+        <!-- Forex Cards -->
+        <div class="payment-card">
+          <div class="payment-badge">TRAVEL</div>
+          <div class="payment-icon">🎫</div>
+          <div class="payment-name">Multi-Currency Forex Card</div>
+          <div class="payment-code">Prepaid Travel Card</div>
+          <div class="payment-desc">Prepaid card loaded with multiple currencies for safe international travel payments.</div>
+          <div class="payment-feature">15+ currency support</div>
+          <div class="payment-feature">Locked-in rates</div>
+          <div class="payment-feature">Worldwide acceptance</div>
+          <div class="payment-feature">ATM withdrawals</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Processing Time</div>
+            <div class="detail-value">2-3 business days</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Card Fee</div>
+            <div class="detail-value">₹500 - ₹1,000</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">International travel, shopping abroad, currency conversion</div>
+          </div>
+        </div>
+
+        <!-- LC (Letter of Credit) -->
+        <div class="payment-card">
+          <div class="payment-badge">TRADE</div>
+          <div class="payment-icon">📋</div>
+          <div class="payment-name">Letter of Credit (LC)</div>
+          <div class="payment-code">Trade Finance Instrument</div>
+          <div class="payment-desc">Bank guarantee for international trade transactions ensuring payment security for both parties.</div>
+          <div class="payment-feature">Bank-backed guarantee</div>
+          <div class="payment-feature">Document-based payment</div>
+          <div class="payment-feature">Dispute resolution</div>
+          <div class="payment-feature">Industry standard</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Processing Time</div>
+            <div class="detail-value">3-7 business days</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Charges</div>
+            <div class="detail-value">0.5%-1.5% of LC value</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">International trade, import/export, large business deals</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Digital Payments Tab -->
+    <div id="digital" class="tab-content">
+      <div class="payment-grid">
+        <!-- Credit/Debit Card -->
+        <div class="payment-card">
+          <div class="payment-badge">DIGITAL</div>
+          <div class="payment-icon">💳</div>
+          <div class="payment-name">Credit/Debit Card</div>
+          <div class="payment-code">Plastic/Virtual Payment Card</div>
+          <div class="payment-desc">Plastic or virtual card for online and offline payments with fraud protection.</div>
+          <div class="payment-feature">Worldwide acceptance</div>
+          <div class="payment-feature">Online & POS payments</div>
+          <div class="payment-feature">Rewards & cashback</div>
+          <div class="payment-feature">Fraud protection</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Transaction Time</div>
+            <div class="detail-value">Instant to 2 hours</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">0-2% Merchant fee</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">Online shopping, retail, international purchases</div>
+          </div>
+        </div>
+
+        <!-- E-Wallet -->
+        <div class="payment-card">
+          <div class="payment-badge">MOBILE</div>
+          <div class="payment-icon">📲</div>
+          <div class="payment-name">Digital E-Wallet</div>
+          <div class="payment-code">Mobile Payment App</div>
+          <div class="payment-desc">Digital wallet storing payment information for quick and secure mobile transactions.</div>
+          <div class="payment-feature">One-click payments</div>
+          <div class="payment-feature">Stored payment methods</div>
+          <div class="payment-feature">Rewards programs</div>
+          <div class="payment-feature">Bill payment integration</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Transaction Time</div>
+            <div class="detail-value">Instant (5-10 seconds)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">Usually free or minimal</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">Mobile shopping, bill payments, everyday spending</div>
+          </div>
+        </div>
+
+        <!-- QR Code Payment -->
+        <div class="payment-card featured">
+          <div class="payment-badge">MODERN</div>
+          <div class="payment-icon">📱</div>
+          <div class="payment-name">QR Code Payment</div>
+          <div class="payment-code">Dynamic Quick Response Code</div>
+          <div class="payment-desc">Scan and pay using QR codes for contactless, secure, and hassle-free transactions.</div>
+          <div class="payment-feature">Contactless payment</div>
+          <div class="payment-feature">Dynamic QR codes</div>
+          <div class="payment-feature">Immediate confirmation</div>
+          <div class="payment-feature">No card needed</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Transaction Time</div>
+            <div class="detail-value">Instant (15-30 seconds)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">No charge (free)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">Retail stores, restaurants, contactless payment</div>
+          </div>
+        </div>
+
+        <!-- Cryptocurrency/Digital Currency -->
+        <div class="payment-card">
+          <div class="payment-badge">EMERGING</div>
+          <div class="payment-icon">₿</div>
+          <div class="payment-name">Digital Currency</div>
+          <div class="payment-code">Blockchain-based Payment</div>
+          <div class="payment-desc">Modern digital currencies and cryptocurrencies for decentralized and fast payments.</div>
+          <div class="payment-feature">Decentralized transfer</div>
+          <div class="payment-feature">Blockchain secured</div>
+          <div class="payment-feature">Low transaction cost</div>
+          <div class="payment-feature"> 24/7 availability</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Settlement Time</div>
+            <div class="detail-value">5 minutes to 1 hour</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">0.1%-2% (variable)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">Tech-savvy users, international transfers, emerging markets</div>
+          </div>
+        </div>
+
+        <!-- BNPL -->
+        <div class="payment-card">
+          <div class="payment-badge">FLEXIBLE</div>
+          <div class="payment-icon">📅</div>
+          <div class="payment-name">Buy Now Pay Later</div>
+          <div class="payment-code">BNPL Service</div>
+          <div class="payment-desc">Flexible payment service allowing customers to split purchases into installments.</div>
+          <div class="payment-feature">Payment installments</div>
+          <div class="payment-feature">Interest-free options</div>
+          <div class="payment-feature">Quick approval</div>
+          <div class="payment-feature">Flexible schedules</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Processing Time</div>
+            <div class="detail-value">Instant approval</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Charges</div>
+            <div class="detail-value">0% or 5-25% APR</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">Online shopping, large purchases, flexible payment needs</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Specialized Payments Tab -->
+    <div id="specialized" class="tab-content">
+      <div class="payment-grid">
+        <!-- Standing Instruction -->
+        <div class="payment-card">
+          <div class="payment-badge">AUTOMATED</div>
+          <div class="payment-icon">⏰</div>
+          <div class="payment-name">Standing Instruction</div>
+          <div class="payment-code">Recurring Automated Payment</div>
+          <div class="payment-desc">Automated recurring payments set up for regular expenses like EMIs and insurance premiums.</div>
+          <div class="payment-feature">Automated scheduling</div>
+          <div class="payment-feature">Fixed or variable amount</div>
+          <div class="payment-feature">Can be modified easily</div>
+          <div class="payment-feature">Never miss a payment</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Processing</div>
+            <div class="detail-value">Automatic on set date</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">Usually free</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">EMI payments, insurance, regular subscriptions</div>
+          </div>
+        </div>
+
+        <!-- Bulk Payment -->
+        <div class="payment-card">
+          <div class="payment-badge">BUSINESS</div>
+          <div class="payment-icon">📦</div>
+          <div class="payment-name">Bulk Payment / Payroll</div>
+          <div class="payment-code">Mass Salary Disbursement</div>
+          <div class="payment-desc">Efficient system for companies to disburse salaries and payments to multiple employees at once.</div>
+          <div class="payment-feature">Single file upload</div>
+          <div class="payment-feature">Multiple beneficiaries</div>
+          <div class="payment-feature">Faster processing</div>
+          <div class="payment-feature">Complete tracking</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Processing Time</div>
+            <div class="detail-value">Same day</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">Per-transaction charge</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">Corporate payroll, vendor payments, large distributions</div>
+          </div>
+        </div>
+
+        <!-- Tax Payment -->
+        <div class="payment-card featured">
+          <div class="payment-badge">GOVERNMENT</div>
+          <div class="payment-icon">🏛️</div>
+          <div class="payment-name">Tax/Utility Payment</div>
+          <div class="payment-code">Government Dues Payment</div>
+          <div class="payment-desc">Direct payment gateway for taxes, utility bills, and government fee payments with instant confirmation.</div>
+          <div class="payment-feature">Direct to government</div>
+          <div class="payment-feature">Instant receipt generation</div>
+          <div class="payment-feature">Challan support</div>
+          <div class="payment-feature">Multiple payment modes</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Processing Time</div>
+            <div class="detail-value">Instant confirmation</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">No charge (government mandate)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">Income tax, GST, property tax, utilities</div>
+          </div>
+        </div>
+
+        <!-- Bill Payment -->
+        <div class="payment-card">
+          <div class="payment-badge">UTILITY</div>
+          <div class="payment-icon">📱</div>
+          <div class="payment-name">Bill Payment Service</div>
+          <div class="payment-code">Online Recurring Bill Payment</div>
+          <div class="payment-desc">Centralized payment platform for all utility bills including electricity, water, mobile, and internet.</div>
+          <div class="payment-feature">Multiple billers</div>
+          <div class="payment-feature">Auto-pay options</div>
+          <div class="payment-feature">Bill history tracking</div>
+          <div class="payment-feature">Instant confirmation</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Processing Time</div>
+            <div class="detail-value">Instant to 24 hours</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">Usually free or minimal</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">Monthly bills, regular payments, payment tracking</div>
+          </div>
+        </div>
+
+        <!-- Escrow Payment -->
+        <div class="payment-card">
+          <div class="payment-badge">SECURE</div>
+          <div class="payment-icon">🔒</div>
+          <div class="payment-name">Escrow Payment</div>
+          <div class="payment-code">Third-party Protected Payment</div>
+          <div class="payment-desc">Secure payment method where bank holds funds until conditions are met, protecting both parties.</div>
+          <div class="payment-feature">Neutral third-party holder</div>
+          <div class="payment-feature">Condition-based release</div>
+          <div class="payment-feature">Dispute resolution</div>
+          <div class="payment-feature">High security</div>
+          <div class="payment-details">
+            <div class="detail-label">⏱️ Processing Time</div>
+            <div class="detail-value">Conditional (2-7 days)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">💰 Processing Fee</div>
+            <div class="detail-value">₹500 - ₹5,000 (based on amount)</div>
+            <div class="detail-label" style="margin-top: 0.8rem;">📊 Best For</div>
+            <div class="detail-value">Real estate deals, large transactions, online purchases</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Table Section -->
+  <section class="section comparison-section">
+    <div class="section-label">Quick Comparison</div>
+    <div class="section-title">Payment Methods <em>Comparison</em></div>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Payment Method</th>
+          <th>Settlement Time</th>
+          <th>Best For</th>
+          <th>Minimum Amount</th>
+          <th>Security</th>
+          <th>Availability</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>NEFT</strong></td>
+          <td>1-2 hours</td>
+          <td>Regular transfers</td>
+          <td>₹1</td>
+          <td class="check">High</td>
+          <td>Banking hours</td>
+        </tr>
+        <tr>
+          <td><strong>RTGS</strong></td>
+          <td>2-30 minutes</td>
+          <td>Urgent payments</td>
+          <td>₹2 Lakhs</td>
+          <td class="check">Very High</td>
+          <td>Banking hours</td>
+        </tr>
+        <tr>
+          <td><strong>IMPS</strong></td>
+          <td>Instant</td>
+          <td>Quick transfers</td>
+          <td>₹1</td>
+          <td class="check">High</td>
+          <td>24/7</td>
+        </tr>
+        <tr>
+          <td><strong>UPI</strong></td>
+          <td>Instant</td>
+          <td>Retail payments</td>
+          <td>₹1</td>
+          <td class="check">High</td>
+          <td>24/7</td>
+        </tr>
+        <tr>
+          <td><strong>Cheque</strong></td>
+          <td>3-5 days</td>
+          <td>Large amounts</td>
+          <td>Any</td>
+          <td class="check">High</td>
+          <td>Business days</td>
+        </tr>
+        <tr>
+          <td><strong>Demand Draft</strong></td>
+          <td>2-3 days</td>
+          <td>High-value</td>
+          <td>₹1,000</td>
+          <td class="check">Very High</td>
+          <td>Business days</td>
+        </tr>
+        <tr>
+          <td><strong>Credit Card</strong></td>
+          <td>1-2 hours</td>
+          <td>Online shopping</td>
+          <td>₹1</td>
+          <td class="check">High</td>
+          <td>24/7</td>
+        </tr>
+        <tr>
+          <td><strong>SWIFT</strong></td>
+          <td>1-3 days</td>
+          <td>International</td>
+          <td>$1</td>
+          <td class="check">Very High</td>
+          <td>Business days</td>
+        </tr>
+        <tr>
+          <td><strong>QR Payment</strong></td>
+          <td>Instant</td>
+          <td>Contactless</td>
+          <td>₹1</td>
+          <td class="check">High</td>
+          <td>24/7</td>
+        </tr>
+        <tr>
+          <td><strong>Standing Order</strong></td>
+          <td>Automatic</td>
+          <td>Regular bills</td>
+          <td>Any</td>
+          <td class="check">High</td>
+          <td>Recurring</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Make a Payment Form Section -->
+  <section class="section">
+    <div class="section-label">Ready to Make a Payment?</div>
+    <div class="section-title">Initiate Your <em>Payment</em></div>
+
+    <form class="payment-form" onsubmit="handlePaymentForm(event)">
+      <div class="form-info">
+        ℹ️ Choose your preferred payment method below and follow the simple steps to complete your transaction securely.
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Payment Type</label>
+        <select class="form-select" name="payment-type" onchange="updatePaymentForm()">
+          <option value="">-- Select Payment Type --</option>
+          <option value="neft">NEFT - National Electronic Funds Transfer</option>
+          <option value="rtgs">RTGS - Real-Time Gross Settlement</option>
+          <option value="imps">IMPS - Immediate Payment Service</option>
+          <option value="upi">UPI - Unified Payments Interface</option>
+          <option value="cheque">Cheque Payment</option>
+          <option value="dd">Demand Draft</option>
+          <option value="card">Credit/Debit Card</option>
+          <option value="swift">SWIFT - International Transfer</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Beneficiary Details</label>
+        <input type="text" class="form-input" placeholder="Beneficiary Name" name="beneficiary-name" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Bank Name</label>
+          <input type="text" class="form-input" placeholder="Beneficiary Bank" name="bank-name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Account Number</label>
+          <input type="text" class="form-input" placeholder="Beneficiary Account No" name="account-number" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">IFSC Code</label>
+          <input type="text" class="form-input" placeholder="e.g., HDFC0000123" name="ifsc-code" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Amount (₹)</label>
+          <input type="number" class="form-input" placeholder="Enter amount" name="amount" step="0.01" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Payment Description</label>
+        <input type="text" class="form-input" placeholder="Purpose of payment" name="description" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Scheduled For (Optional)</label>
+        <input type="date" class="form-input" name="schedule-date">
+      </div>
+
+      <button type="submit" class="btn">Proceed to Payment</button>
+    </form>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section faq-section">
+    <div class="section-label">Common Questions</div>
+    <div class="section-title">Payment <em>FAQs</em></div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        <span class="faq-q-text">What is the difference between NEFT and RTGS?</span>
+        <span class="faq-icon">▼</span>
+      </div>
+      <div class="faq-answer">
+        <strong>NEFT (National Electronic Funds Transfer):</strong> Processes payments in batches (typically half-hourly) and is suitable for regular transfers of any amount. Settlement takes 1-2 hours.<br><br>
+        <strong>RTGS (Real-Time Gross Settlement):</strong> Processes payments individually in real-time with instant settlement. Minimum amount is ₹2 lakhs. Best for urgent, high-value transfers.<br><br>
+        Choose NEFT for regular payments and RTGS for urgent, high-value transfers.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        <span class="faq-q-text">Is UPI payment safe and secure?</span>
+        <span class="faq-icon">▼</span>
+      </div>
+      <div class="faq-answer">
+        Yes, UPI payments are very secure. UPI uses multiple layers of security including:
+        <br>• PIN-based authentication (UPI PIN required for every transaction)
+        <br>• End-to-end encryption
+        <br>• Bank-grade security standards
+        <br>• Transaction limits to prevent fraud
+        <br>• Registered bank accounts only
+        <br><br>Always ensure you use a registered UPI ID and never share your UPI PIN with anyone.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        <span class="faq-q-text">Can I cancel or recall a payment once sent?</span>
+        <span class="faq-icon">▼</span>
+      </div>
+      <div class="faq-answer">
+        <strong>For instant payments (IMPS, UPI, RTGS):</strong> Once processed, these payments cannot be cancelled. However, you can request a refund from the beneficiary.<br><br>
+        <strong>For batch payments (NEFT):</strong> Within the same batch processing cycle, the payment can sometimes be cancelled if it hasn't settled yet. Contact your bank immediately.<br><br>
+        <strong>For cheques:</strong> You can stop payment by submitting a "stop cheque" request to your bank.<br><br>
+        Always verify beneficiary details before sending payments to avoid costly mistakes.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        <span class="faq-q-text">What payment method should I use for international transfers?</span>
+        <span class="faq-icon">▼</span>
+      </div>
+      <div class="faq-answer">
+        For international transfers, you have several options:<br><br>
+        <strong>SWIFT Wire Transfer:</strong> Most common for bank-to-bank transfers worldwide<br>
+        <strong>Foreign Remittance:</strong> Special service for personal remittances with competitive rates<br>
+        <strong>Forex Cards:</strong> For travel and shopping abroad<br>
+        <strong>Digital Currency:</strong> For tech-savvy users wanting instant settlement<br><br>
+        SWIFT is recommended for most international business payments, while remittance services are better for personal transfers.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        <span class="faq-q-text">What are the transaction limits for different payment methods?</span>
+        <span class="faq-icon">▼</span>
+      </div>
+      <div class="faq-answer">
+        <strong>UPI:</strong> ₹1 lakh per transaction (varies by bank)<br>
+        <strong>IMPS:</strong> ₹10 lakhs per transaction<br>
+        <strong>NEFT:</strong> No upper limit<br>
+        <strong>RTGS:</strong> ₹2 lakhs minimum, no upper limit<br>
+        <strong>Cheque:</strong> No limit (based on account balance)<br>
+        <strong>Demand Draft:</strong> Usually up to ₹10 lakhs<br><br>
+        For high-value transactions, use RTGS or demand draft. Your bank may allow higher limits on request.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        <span class="faq-q-text">How long does an international SWIFT payment take?</span>
+        <span class="faq-icon">▼</span>
+      </div>
+      <div class="faq-answer">
+        <strong>Typical timeline for SWIFT payments:</strong><br>
+        • Processing by sending bank: Same day<br>
+        • Transmission via SWIFT network: Instant to 1 hour<br>
+        • Clearing through correspondent banks: 1-2 days<br>
+        • Credit to beneficiary account: Usually 1-3 business days total<br><br>
+        Time zones and intermediary banks can affect settlement. Weekend transfers may take longer. Always provide complete SWIFT details including IBAN or account number for faster processing.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">
+        <span class="faq-q-text">What should I do if a payment fails or goes wrong?</span>
+        <span class="faq-icon">▼</span>
+      </div>
+      <div class="faq-answer">
+        <strong>If a payment fails:</strong><br>
+        1. Check your bank account to confirm funds weren't debited<br>
+        2. Note the transaction reference number<br>
+        3. Contact your bank's customer service immediately<br>
+        4. For NEFT/RTGS, provide the transaction ID for tracing<br>
+        5. Bank will investigate and provide reversal status within 5-7 days<br><br>
+        <strong>If payment was sent to wrong account:</strong><br>
+        • Contact your bank immediately with transaction details<br>
+        • Bank will initiate a recall request to the recipient bank<br>
+        • Success depends on whether funds have been withdrawn<br><br>
+        Always double-check all details before confirming payment!
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">NexusBank</div>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="loans.html">Loans</a></li>
+      <li><a href="investments.html">Investments</a></li>
+      <li><a href="payment.html">Payments</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="footer-copy">© 2025 NexusBank. All rights reserved.</div>
+  </footer>
+
+  <script>
+    // Tab functionality
+    function showTab(tabName) {
+      const contents = document.querySelectorAll('.tab-content');
+      const buttons = document.querySelectorAll('.tab-btn');
+
+      contents.forEach(content => content.classList.remove('active'));
+      buttons.forEach(button => button.classList.remove('active'));
+
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', function () {
+        const item = this.parentElement;
+        item.classList.toggle('active');
+
+        // Close other items
+        document.querySelectorAll('.faq-item').forEach(faqItem => {
+          if (faqItem !== item) {
+            faqItem.classList.remove('active');
+          }
+        });
+      });
+    });
+
+    // Payment Form Handler
+    function handlePaymentForm(event) {
+      event.preventDefault();
+
+      const paymentType = document.querySelector('[name="payment-type"]').value;
+      const beneficiaryName = document.querySelector('[name="beneficiary-name"]').value;
+      const amount = document.querySelector('[name="amount"]').value;
+
+      if (!paymentType) {
+        alert('Please select a payment type');
+        return;
+      }
+
+      const message = `Payment Summary:\n\nType: ${paymentType.toUpperCase()}\nBeneficiary: ${beneficiaryName}\nAmount: ₹${parseFloat(amount).toLocaleString('en-IN')}\n\nProceeding to secure payment gateway...`;
+
+      alert(message);
+      console.log('Form submitted:', {
+        paymentType,
+        beneficiaryName,
+        amount
+      });
+
+      // Reset form
+      event.target.reset();
+    }
+
+    // Update payment form based on selected type
+    function updatePaymentForm() {
+      const paymentType = document.querySelector('[name="payment-type"]').value;
+      console.log('Payment type selected:', paymentType);
+      // Can add conditional logic here for different payment types
+    }
+
+    // Smooth scroll to payment form
+    function scrollToPaymentForm() {
+      document.querySelector('.payment-form').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+
+</body>
+
+</html>

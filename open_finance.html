@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open Finance — The Way of FS | NexusBank</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --cream: #faf8f3;
+    --mid: #1e2d4a;
+    --muted: #8a9bb8;
+    --white: #ffffff;
+    --accent: #1257e0;
+    --success: #1aad6e;
+    --warning: #e8932a;
+    --danger: #d94f4f;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--navy); color:var(--white); overflow-x:hidden; }
+
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:1.2rem 4rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(201,168,76,0.15); background:rgba(10,22,40,0.98); backdrop-filter:blur(10px); }
+  .logo { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--gold); letter-spacing:0.04em; }
+  .logo span { color:var(--white); }
+  .nav-links { display:flex; gap:2rem; list-style:none; flex-wrap:wrap; }
+  .nav-links a { color:var(--muted); text-decoration:none; font-size:0.88rem; font-weight:400; letter-spacing:0.03em; transition:color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color:var(--gold); }
+  .nav-cta { background:var(--gold); color:var(--navy); padding:0.55rem 1.5rem; border-radius:2px; font-size:0.85rem; font-weight:500; text-decoration:none; letter-spacing:0.06em; transition:background 0.2s; }
+  .nav-cta:hover { background:var(--gold-light); }
+
+  .page-hero { padding:10rem 4rem 5rem; background:linear-gradient(180deg, var(--mid) 0%, var(--navy) 100%); position:relative; overflow:hidden; margin-top:70px; }
+  .page-hero::before { content:''; position:absolute; top:-100px; right:-100px; width:500px; height:500px; border-radius:50%; border:1px solid rgba(201,168,76,0.06); }
+  .page-hero::after { content:''; position:absolute; top:-50px; right:-50px; width:300px; height:300px; border-radius:50%; border:1px solid rgba(201,168,76,0.1); }
+  .breadcrumb { font-size:0.8rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1rem; position:relative; z-index:1; }
+  .breadcrumb a { color:var(--gold); text-decoration:none; }
+  .page-title { font-family:'Playfair Display',serif; font-size:clamp(2.5rem,5vw,4rem); font-weight:900; margin-bottom:1rem; position:relative; z-index:1; }
+  .page-title em { color:var(--gold); font-style:normal; }
+  .page-sub { color:var(--muted); font-size:1.05rem; max-width:680px; line-height:1.8; font-weight:300; position:relative; z-index:1; }
+  .hero-pills { display:flex; gap:0.8rem; flex-wrap:wrap; margin-top:2rem; position:relative; z-index:1; }
+  .pill { border:1px solid rgba(201,168,76,0.3); color:var(--gold); font-size:0.78rem; padding:0.4rem 1rem; border-radius:20px; letter-spacing:0.04em; }
+
+  .section { padding:5rem 4rem; }
+  .section-alt { background:var(--mid); }
+  .section-label { font-size:0.75rem; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:0.6rem; }
+  .section-title { font-family:'Playfair Display',serif; font-size:clamp(1.7rem,3vw,2.3rem); font-weight:700; margin-bottom:0.8rem; }
+  .section-title em { color:var(--gold); font-style:normal; }
+  .section-subtitle { color:var(--muted); font-size:0.95rem; max-width:720px; line-height:1.8; margin-bottom:2.5rem; }
+
+  /* Info boxes */
+  .info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; margin-bottom:2rem; }
+  .info-box { background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.2); border-radius:8px; padding:1.8rem; }
+  .info-title { font-size:1.05rem; font-weight:600; color:var(--gold); margin-bottom:0.8rem; }
+  .info-content { color:var(--muted); line-height:1.8; font-size:0.92rem; }
+
+  /* Evolution strip */
+  .evo-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:2.5rem; }
+  .evo-step { background:var(--mid); border:1px solid rgba(201,168,76,0.12); border-radius:8px; padding:1.8rem; position:relative; }
+  .evo-num { font-family:'Playfair Display',serif; color:var(--gold); font-size:1.6rem; font-weight:700; margin-bottom:0.6rem; }
+  .evo-step h4 { font-size:1.05rem; margin-bottom:0.5rem; color:var(--white); }
+  .evo-step p { color:var(--muted); font-size:0.85rem; line-height:1.6; }
+  .evo-arrow { display:none; }
+
+  /* Diagram */
+  .diagram-wrap { background:var(--mid); border:1px solid rgba(201,168,76,0.15); border-radius:12px; padding:2rem; overflow-x:auto; margin-bottom:1.5rem; }
+  .diagram-caption { color:var(--muted); font-size:0.85rem; text-align:center; margin-top:0.5rem; }
+  svg text { font-family:'DM Sans',sans-serif; }
+
+  /* Participant tabs */
+  .tab-bar { display:flex; gap:0; border-bottom:1px solid rgba(201,168,76,0.15); margin-bottom:2.5rem; overflow-x:auto; }
+  .tab-btn { padding:0.9rem 1.6rem; font-size:0.82rem; letter-spacing:0.05em; color:var(--muted); background:none; border:none; cursor:pointer; border-bottom:2px solid transparent; transition:all 0.2s; white-space:nowrap; }
+  .tab-btn:hover { color:var(--gold); }
+  .tab-btn.active { color:var(--gold); border-bottom-color:var(--gold); }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; animation:fadeIn 0.3s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  .player-card { background:var(--mid); border:1px solid rgba(201,168,76,0.1); border-radius:8px; padding:2.2rem; margin-bottom:1.5rem; }
+  .player-head { display:flex; align-items:center; gap:1rem; margin-bottom:1.2rem; }
+  .player-icon { font-size:2rem; }
+  .player-name { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--gold); font-weight:700; }
+  .player-role { color:var(--muted); font-size:0.85rem; }
+  .growth-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.2rem; margin-top:1.2rem; }
+  .growth-item { background:rgba(255,255,255,0.03); border-left:3px solid var(--gold); padding:1rem 1.2rem; border-radius:4px; }
+  .growth-item-title { font-weight:600; color:var(--white); font-size:0.9rem; margin-bottom:0.4rem; }
+  .growth-item-desc { color:var(--muted); font-size:0.83rem; line-height:1.6; }
+
+  /* Flywheel stats */
+  .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1.5rem; }
+  .stat-card { background:var(--mid); border:1px solid rgba(201,168,76,0.12); border-radius:8px; padding:1.8rem; text-align:center; }
+  .stat-num { font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:700; color:var(--gold); }
+  .stat-label { color:var(--muted); font-size:0.82rem; margin-top:0.4rem; letter-spacing:0.03em; }
+
+  /* Comparison table */
+  .compare-table { width:100%; border-collapse:separate; border-spacing:0; margin-top:1rem; }
+  .compare-table th { background:var(--mid); padding:1rem 1.2rem; font-size:0.78rem; letter-spacing:0.08em; color:var(--gold); text-transform:uppercase; font-weight:600; text-align:left; border-bottom:2px solid rgba(201,168,76,0.2); }
+  .compare-table td { padding:1rem 1.2rem; font-size:0.88rem; color:var(--muted); border-bottom:1px solid rgba(255,255,255,0.04); }
+  .compare-table tr:hover td { background:rgba(201,168,76,0.03); }
+  .table-scroll { overflow-x:auto; }
+
+  /* Enablers grid */
+  .enabler-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5rem; }
+  .enabler-card { background:var(--mid); border:1px solid rgba(201,168,76,0.1); border-radius:8px; padding:1.8rem; transition:all 0.3s; }
+  .enabler-card:hover { border-color:rgba(201,168,76,0.35); transform:translateY(-4px); }
+  .enabler-icon { font-size:1.8rem; margin-bottom:0.8rem; }
+  .enabler-name { font-weight:600; color:var(--gold); margin-bottom:0.5rem; font-family:'Playfair Display',serif; font-size:1.1rem; }
+  .enabler-desc { color:var(--muted); font-size:0.85rem; line-height:1.7; }
+
+  /* FAQ */
+  .faq-item { background:var(--mid); border:1px solid rgba(201,168,76,0.1); border-radius:8px; margin-bottom:1rem; overflow:hidden; }
+  .faq-question { padding:1.3rem 1.5rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center; user-select:none; }
+  .faq-question:hover { background:rgba(201,168,76,0.05); }
+  .faq-q-text { font-weight:600; color:var(--gold); font-size:0.95rem; }
+  .faq-icon { transition:transform 0.3s; }
+  .faq-item.active .faq-icon { transform:rotate(180deg); }
+  .faq-answer { display:none; padding:0 1.5rem 1.3rem; color:var(--muted); line-height:1.8; font-size:0.9rem; border-top:1px solid rgba(201,168,76,0.1); }
+  .faq-item.active .faq-answer { display:block; animation:fadeIn 0.3s ease; }
+
+  footer { background:#060e1a; padding:3rem 4rem; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(201,168,76,0.1); flex-wrap:wrap; gap:1.5rem; }
+  .footer-logo { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--gold); }
+  .footer-links { display:flex; gap:2rem; list-style:none; flex-wrap:wrap; }
+  .footer-links a { color:var(--muted); text-decoration:none; font-size:0.85rem; transition:color 0.2s; }
+  .footer-links a:hover { color:var(--gold); }
+  .footer-copy { color:var(--muted); font-size:0.8rem; }
+
+  @media (max-width:900px) {
+    .evo-strip { grid-template-columns:1fr; }
+  }
+  @media (max-width:768px) {
+    nav { flex-direction:column; gap:1rem; padding:1rem 2rem; }
+    .nav-links { flex-direction:column; gap:0.8rem; text-align:center; }
+    .page-hero { padding:8rem 2rem 3rem; }
+    .section { padding:3rem 1.5rem; }
+    footer { flex-direction:column; text-align:center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Nexus<span>Bank</span></div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="loans.html">Loans</a></li>
+    <li><a href="investments.html">Investments</a></li>
+    <li><a href="payment.html">Payments</a></li>
+    <li><a href="corporate_banking.html">Corporate</a></li>
+    <li><a href="calculator.html">Calculator</a></li>
+    <li><a href="open_finance.html" class="active">Open Finance</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Open Account</a>
+</nav>
+
+<div class="page-hero">
+  <div class="breadcrumb"><a href="index.html">Home</a> / Open Finance</div>
+  <h1 class="page-title">Open Finance — <em>The Way of FS</em></h1>
+  <p class="page-sub">A detailed look at the Open Banking and Open Finance ecosystem: the functional architecture that connects banks, fintechs, TPPs, regulators and customers — and how every participant turns shared, consented data and APIs into measurable growth.</p>
+  <div class="hero-pills">
+    <span class="pill">Open Banking</span>
+    <span class="pill">Open Finance</span>
+    <span class="pill">Embedded Finance</span>
+    <span class="pill">Account Aggregator</span>
+    <span class="pill">API Economy</span>
+  </div>
+</div>
+
+<!-- SECTION: DEFINITION -->
+<section class="section">
+  <div class="section-label">Understanding the Shift</div>
+  <div class="section-title">What is Open Banking & <em>Open Finance?</em></div>
+  <p class="section-subtitle">Open Banking is the practice of banks exposing customer-consented account and transaction data — and payment initiation — to authorised third parties via secure APIs. Open Finance extends the same consent-driven model beyond current/savings accounts to the full spectrum of financial services: loans, investments, insurance, pensions and tax data — making the whole financial life of a customer portable, comparable and actionable.</p>
+
+  <div class="info-grid">
+    <div class="info-box">
+      <div class="info-title">🏦 Open Banking</div>
+      <div class="info-content">Bank account data (balances, transactions) and payment initiation shared with licensed Third Party Providers (TPPs) via regulated APIs, with explicit customer consent. Powers PFM apps, lending underwriting, and account-to-account payments.</div>
+    </div>
+    <div class="info-box" style="background:rgba(26,173,110,0.08); border-color:rgba(26,173,110,0.2);">
+      <div class="info-title">🌐 Open Finance</div>
+      <div class="info-content">Widens the data perimeter to investments, insurance, pensions, credit bureaus, GST and tax records. A single consent can pull a 360° financial picture across every institution a customer deals with — not just their bank.</div>
+    </div>
+    <div class="info-box" style="background:rgba(232,147,42,0.08); border-color:rgba(232,147,42,0.2);">
+      <div class="info-title">🔗 Embedded Finance</div>
+      <div class="info-content">The next layer: financial products (credit, insurance, payments) embedded directly inside non-financial platforms — e-commerce, ERP, gig platforms — using the same open APIs, so finance shows up at the point of need.</div>
+    </div>
+  </div>
+
+  <div class="evo-strip">
+    <div class="evo-step">
+      <div class="evo-num">01</div>
+      <h4>Closed Banking</h4>
+      <p>Data locked inside each bank's core system. Customers manually shared statements; switching or comparing products was slow and paper-heavy.</p>
+    </div>
+    <div class="evo-step">
+      <div class="evo-num">02</div>
+      <h4>Open Banking</h4>
+      <p>Regulator-mandated or market-led APIs (PSD2 in the EU, Account Aggregator framework in India) let consented apps read accounts and initiate payments.</p>
+    </div>
+    <div class="evo-step">
+      <div class="evo-num">03</div>
+      <h4>Open Finance / Embedded</h4>
+      <p>Data and rails span the full financial stack and are woven into everyday platforms — banking becomes a feature, not a destination.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: ARCHITECTURE DIAGRAM -->
+<section class="section section-alt">
+  <div class="section-label">Functional Architecture</div>
+  <div class="section-title">Open Finance <em>Ecosystem Blueprint</em></div>
+  <p class="section-subtitle">The architecture works in five functional layers — from the customer who owns the data, down through the consent and API layer, out to every participant that consumes or supplies data, all wrapped in a regulatory and security perimeter.</p>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; min-width:900px;">
+      <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L0,6 L9,3 z" fill="#c9a84c"/>
+        </marker>
+      </defs>
+
+      <!-- Layer 1: Customers -->
+      <rect x="40" y="20" width="1120" height="90" rx="10" fill="#1e2d4a" stroke="#c9a84c" stroke-opacity="0.3"/>
+      <text x="70" y="50" fill="#c9a84c" font-size="13" letter-spacing="2" font-weight="700">LAYER 1 · DATA OWNERS</text>
+      <g font-size="13" fill="#8a9bb8">
+        <rect x="70" y="62" width="180" height="34" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="160" y="83" text-anchor="middle" fill="#fff">👤 Individuals</text>
+        <rect x="270" y="62" width="180" height="34" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="360" y="83" text-anchor="middle" fill="#fff">🏪 MSMEs</text>
+        <rect x="470" y="62" width="180" height="34" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="560" y="83" text-anchor="middle" fill="#fff">🏢 Corporates</text>
+        <rect x="670" y="62" width="230" height="34" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="785" y="83" text-anchor="middle" fill="#fff">👥 Gig &amp; Underbanked Segments</text>
+        <rect x="920" y="62" width="220" height="34" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="1030" y="83" text-anchor="middle" fill="#fff">🏛️ Government / DPI users</text>
+      </g>
+
+      <line x1="600" y1="110" x2="600" y2="140" stroke="#c9a84c" stroke-width="2" marker-end="url(#arrow)"/>
+      <text x="620" y="130" fill="#8a9bb8" font-size="11">consent</text>
+
+      <!-- Layer 2: Channels -->
+      <rect x="40" y="145" width="1120" height="85" rx="10" fill="#1e2d4a" stroke="#c9a84c" stroke-opacity="0.3"/>
+      <text x="70" y="172" fill="#c9a84c" font-size="13" letter-spacing="2" font-weight="700">LAYER 2 · CHANNELS</text>
+      <g font-size="12" fill="#fff">
+        <rect x="70" y="184" width="200" height="34" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="170" y="205" text-anchor="middle">📱 Bank &amp; Neobank Apps</text>
+        <rect x="290" y="184" width="200" height="34" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="390" y="205" text-anchor="middle">🧩 Fintech / Lending Apps</text>
+        <rect x="510" y="184" width="200" height="34" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="610" y="205" text-anchor="middle">📊 PFM &amp; Wealth Apps</text>
+        <rect x="730" y="184" width="200" height="34" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="830" y="205" text-anchor="middle">🛒 Embedded / Merchant UX</text>
+        <rect x="950" y="184" width="190" height="34" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="1045" y="205" text-anchor="middle">🏛️ Gov / ERP Platforms</text>
+      </g>
+
+      <line x1="600" y1="230" x2="600" y2="260" stroke="#c9a84c" stroke-width="2" marker-end="url(#arrow)"/>
+      <text x="616" y="250" fill="#8a9bb8" font-size="11">API call + consent artefact</text>
+
+      <!-- Layer 3: Open Finance / Consent & API layer -->
+      <rect x="40" y="265" width="1120" height="150" rx="10" fill="#152238" stroke="#c9a84c" stroke-opacity="0.5"/>
+      <text x="70" y="292" fill="#c9a84c" font-size="13" letter-spacing="2" font-weight="700">LAYER 3 · CONSENT &amp; OPEN API LAYER (the heart of Open Finance)</text>
+      <g font-size="12" fill="#fff">
+        <rect x="70" y="305" width="240" height="60" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.4"/>
+        <text x="190" y="328" text-anchor="middle" fill="#c9a84c" font-weight="700">🔐 Consent Manager</text>
+        <text x="190" y="348" text-anchor="middle" fill="#8a9bb8" font-size="10.5">Account Aggregator (AA) framework</text>
+
+        <rect x="330" y="305" width="240" height="60" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.4"/>
+        <text x="450" y="328" text-anchor="middle" fill="#c9a84c" font-weight="700">🔌 Open API Gateway</text>
+        <text x="450" y="348" text-anchor="middle" fill="#8a9bb8" font-size="10.5">FAPI / OAuth2, rate limits, versioning</text>
+
+        <rect x="590" y="305" width="240" height="60" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.4"/>
+        <text x="710" y="328" text-anchor="middle" fill="#c9a84c" font-weight="700">💳 Payment Initiation (PISP)</text>
+        <text x="710" y="348" text-anchor="middle" fill="#8a9bb8" font-size="10.5">UPI / A2A rails, tokenisation</text>
+
+        <rect x="850" y="305" width="290" height="60" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.4"/>
+        <text x="995" y="328" text-anchor="middle" fill="#c9a84c" font-weight="700">📄 Data Standardisation</text>
+        <text x="995" y="348" text-anchor="middle" fill="#8a9bb8" font-size="10.5">FI schema, ID &amp; e-KYC, DigiLocker</text>
+      </g>
+      <text x="70" y="400" fill="#8a9bb8" font-size="10.5">Governed by: RBI / regulator API specs · DPDP &amp; data-privacy law · Sahamati-style ecosystem alliance · encryption in transit &amp; at rest</text>
+
+      <line x1="230" y1="415" x2="230" y2="450" stroke="#c9a84c" stroke-width="2" marker-end="url(#arrow)"/>
+      <line x1="600" y1="415" x2="600" y2="450" stroke="#c9a84c" stroke-width="2" marker-end="url(#arrow)" transform="rotate(180 600 432)"/>
+      <line x1="970" y1="415" x2="970" y2="450" stroke="#c9a84c" stroke-width="2" marker-end="url(#arrow)"/>
+      <text x="245" y="440" fill="#8a9bb8" font-size="11">data pull</text>
+      <text x="620" y="440" fill="#8a9bb8" font-size="11">data push</text>
+      <text x="985" y="440" fill="#8a9bb8" font-size="11">insight / offer</text>
+
+      <!-- Layer 4: Data Providers (left) -->
+      <rect x="40" y="455" width="360" height="230" rx="10" fill="#1e2d4a" stroke="#c9a84c" stroke-opacity="0.3"/>
+      <text x="65" y="482" fill="#c9a84c" font-size="12.5" letter-spacing="1.5" font-weight="700">LAYER 4A · DATA PROVIDERS (FIPs)</text>
+      <g font-size="12" fill="#fff">
+        <rect x="60" y="495" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="135" y="520" text-anchor="middle">🏦 Banks</text>
+        <rect x="225" y="495" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="300" y="520" text-anchor="middle">💰 NBFCs</text>
+        <rect x="60" y="545" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="135" y="570" text-anchor="middle">📈 Mutual Funds</text>
+        <rect x="225" y="545" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="300" y="570" text-anchor="middle">🛡️ Insurers</text>
+        <rect x="60" y="595" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="135" y="620" text-anchor="middle">🧓 Pension (NPS)</text>
+        <rect x="225" y="595" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="300" y="620" text-anchor="middle">🧾 GST / Tax</text>
+        <rect x="60" y="645" width="315" height="30" rx="6" fill="none" stroke="#c9a84c" stroke-opacity="0.3" stroke-dasharray="4 3"/>
+        <text x="217" y="665" text-anchor="middle" fill="#8a9bb8" font-size="10.5">= Financial Information Providers</text>
+      </g>
+
+      <!-- Layer 4: TPPs / Fintechs (middle) -->
+      <rect x="420" y="455" width="360" height="230" rx="10" fill="#1e2d4a" stroke="#c9a84c" stroke-opacity="0.3"/>
+      <text x="445" y="482" fill="#c9a84c" font-size="12.5" letter-spacing="1.5" font-weight="700">LAYER 4B · TPPs &amp; FINTECHS (FIUs)</text>
+      <g font-size="12" fill="#fff">
+        <rect x="440" y="495" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="515" y="520" text-anchor="middle">📊 AISPs (data)</text>
+        <rect x="605" y="495" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="680" y="520" text-anchor="middle">💸 PISPs (payments)</text>
+        <rect x="440" y="545" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="515" y="570" text-anchor="middle">🤖 Lending / BNPL</text>
+        <rect x="605" y="545" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="680" y="570" text-anchor="middle">💹 WealthTech / PFM</text>
+        <rect x="440" y="595" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="515" y="620" text-anchor="middle">🏧 Neobanks</text>
+        <rect x="605" y="595" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="680" y="620" text-anchor="middle">🧮 InsurTech</text>
+        <rect x="440" y="645" width="315" height="30" rx="6" fill="none" stroke="#c9a84c" stroke-opacity="0.3" stroke-dasharray="4 3"/>
+        <text x="597" y="665" text-anchor="middle" fill="#8a9bb8" font-size="10.5">= Financial Information Users</text>
+      </g>
+
+      <!-- Layer 4: Enablers & regulators (right) -->
+      <rect x="800" y="455" width="360" height="230" rx="10" fill="#1e2d4a" stroke="#c9a84c" stroke-opacity="0.3"/>
+      <text x="825" y="482" fill="#c9a84c" font-size="12.5" letter-spacing="1.5" font-weight="700">LAYER 4C · ENABLERS &amp; OVERSIGHT</text>
+      <g font-size="12" fill="#fff">
+        <rect x="820" y="495" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="895" y="520" text-anchor="middle">🧭 Account Aggregators</text>
+        <rect x="985" y="495" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="1060" y="520" text-anchor="middle">🛠️ TSPs / API Platforms</text>
+        <rect x="820" y="545" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="895" y="570" text-anchor="middle">🏛️ RBI / SEBI / IRDAI</text>
+        <rect x="985" y="545" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="1060" y="570" text-anchor="middle">📜 Data Protection Authority</text>
+        <rect x="820" y="595" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="895" y="620" text-anchor="middle">🤝 Ecosystem Alliance</text>
+        <rect x="985" y="595" width="150" height="40" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="1060" y="620" text-anchor="middle">🌐 India Stack / DPI</text>
+        <rect x="820" y="645" width="315" height="30" rx="6" fill="none" stroke="#c9a84c" stroke-opacity="0.3" stroke-dasharray="4 3"/>
+        <text x="977" y="665" text-anchor="middle" fill="#8a9bb8" font-size="10.5">= Governance &amp; infrastructure backbone</text>
+      </g>
+
+      <line x1="600" y1="690" x2="600" y2="720" stroke="#c9a84c" stroke-width="2" marker-end="url(#arrow)"/>
+      <text x="616" y="710" fill="#8a9bb8" font-size="11">value delivered</text>
+
+      <!-- Layer 5: Growth outcomes -->
+      <rect x="40" y="725" width="1120" height="150" rx="10" fill="#1e2d4a" stroke="#c9a84c" stroke-opacity="0.3"/>
+      <text x="70" y="752" fill="#c9a84c" font-size="13" letter-spacing="2" font-weight="700">LAYER 5 · GROWTH OUTCOMES ACROSS THE ECOSYSTEM</text>
+      <g font-size="11.5" fill="#8a9bb8">
+        <rect x="70" y="765" width="205" height="90" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="172" y="785" text-anchor="middle" fill="#c9a84c" font-weight="700">Banks</text>
+        <text x="172" y="803" text-anchor="middle">API monetisation,</text>
+        <text x="172" y="819" text-anchor="middle">cross-sell, lower</text>
+        <text x="172" y="835" text-anchor="middle">CAC via partners</text>
+
+        <rect x="290" y="765" width="205" height="90" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="392" y="785" text-anchor="middle" fill="#c9a84c" font-weight="700">Fintechs</text>
+        <text x="392" y="803" text-anchor="middle">Alt-data underwriting,</text>
+        <text x="392" y="819" text-anchor="middle">faster onboarding,</text>
+        <text x="392" y="835" text-anchor="middle">no full banking licence</text>
+
+        <rect x="510" y="765" width="205" height="90" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="612" y="785" text-anchor="middle" fill="#c9a84c" font-weight="700">Aggregators / TPPs</text>
+        <text x="612" y="803" text-anchor="middle">Consent-as-a-service</text>
+        <text x="612" y="819" text-anchor="middle">fee revenue at</text>
+        <text x="612" y="835" text-anchor="middle">ecosystem scale</text>
+
+        <rect x="730" y="765" width="205" height="90" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="832" y="785" text-anchor="middle" fill="#c9a84c" font-weight="700">Merchants / Corporates</text>
+        <text x="832" y="803" text-anchor="middle">Embedded credit &amp;</text>
+        <text x="832" y="819" text-anchor="middle">insurance at checkout,</text>
+        <text x="832" y="835" text-anchor="middle">working-capital access</text>
+
+        <rect x="950" y="765" width="210" height="90" rx="6" fill="#0a1628" stroke="#c9a84c" stroke-opacity="0.25"/>
+        <text x="1055" y="785" text-anchor="middle" fill="#c9a84c" font-weight="700">Consumers</text>
+        <text x="1055" y="803" text-anchor="middle">One-view finances,</text>
+        <text x="1055" y="819" text-anchor="middle">better pricing,</text>
+        <text x="1055" y="835" text-anchor="middle">faster credit decisions</text>
+      </g>
+    </svg>
+  </div>
+  <p class="diagram-caption">Fig. 1 — Functional architecture of the Open Finance ecosystem: data owners → channels → consent &amp; API layer → data providers / TPPs / enablers → growth outcomes.</p>
+</section>
+
+<!-- SECTION: HOW PARTICIPANTS LEVERAGE -->
+<section class="section">
+  <div class="section-label">Ecosystem Value</div>
+  <div class="section-title">How Every Participant <em>Grows</em></div>
+  <p class="section-subtitle">Open Finance is not a single winner-take-all model — each participant monetises a different layer of the stack. Explore how banks, fintechs, TPPs, merchants, consumers and regulators each capture growth.</p>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showTab('banks', this)">Banks</button>
+    <button class="tab-btn" onclick="showTab('fintechs', this)">Fintechs</button>
+    <button class="tab-btn" onclick="showTab('tpps', this)">TPPs / Aggregators</button>
+    <button class="tab-btn" onclick="showTab('merchants', this)">Merchants &amp; Corporates</button>
+    <button class="tab-btn" onclick="showTab('consumers', this)">Consumers</button>
+    <button class="tab-btn" onclick="showTab('regulators', this)">Regulators</button>
+  </div>
+
+  <!-- Banks -->
+  <div id="banks" class="tab-content active">
+    <div class="player-card">
+      <div class="player-head">
+        <div class="player-icon">🏦</div>
+        <div>
+          <div class="player-name">Banks (Data Providers / ASPSPs)</div>
+          <div class="player-role">Own core deposits, custody of accounts, regulatory trust</div>
+        </div>
+      </div>
+      <div class="growth-grid">
+        <div class="growth-item">
+          <div class="growth-item-title">API Monetisation</div>
+          <div class="growth-item-desc">Charge fintech partners for premium data and payment-initiation APIs, turning infrastructure into a revenue line instead of a cost centre.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Distribution at Scale</div>
+          <div class="growth-item-desc">Reach customers through fintech front-ends and embedded checkouts without building every consumer app in-house — lowering customer acquisition cost.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Cross-Sell Intelligence</div>
+          <div class="growth-item-desc">Consented transaction data from other institutions sharpens next-best-product offers — loans, cards, investments — at the right moment.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Deposit &amp; Balance Sheet Growth</div>
+          <div class="growth-item-desc">Becoming the settlement bank behind popular fintech products keeps float and transaction volumes on the bank's books.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fintechs -->
+  <div id="fintechs" class="tab-content">
+    <div class="player-card">
+      <div class="player-head">
+        <div class="player-icon">🧩</div>
+        <div>
+          <div class="player-name">Fintechs &amp; Neobanks</div>
+          <div class="player-role">Build customer experience and underwriting on top of shared rails</div>
+        </div>
+      </div>
+      <div class="growth-grid">
+        <div class="growth-item">
+          <div class="growth-item-title">Alternate-Data Underwriting</div>
+          <div class="growth-item-desc">Cash-flow based lending using consented bank statements, GST and utility data reaches thin-file and new-to-credit customers banks can't score.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">No Full Banking Licence Needed</div>
+          <div class="growth-item-desc">Operate as a TPP/BaaS partner and launch credit, payments or wealth products without the capital and compliance load of a bank charter.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Faster, Frictionless Onboarding</div>
+          <div class="growth-item-desc">e-KYC, DigiLocker and consented data pulls cut onboarding from days to minutes, lifting conversion and reducing drop-off.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Product Velocity</div>
+          <div class="growth-item-desc">Compose new products quickly by combining data and payment APIs from multiple providers instead of building each rail from scratch.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TPPs -->
+  <div id="tpps" class="tab-content">
+    <div class="player-card">
+      <div class="player-head">
+        <div class="player-icon">🧭</div>
+        <div>
+          <div class="player-name">TPPs, Account Aggregators &amp; TSPs</div>
+          <div class="player-role">The plumbing that moves consent, data and payments safely between everyone else</div>
+        </div>
+      </div>
+      <div class="growth-grid">
+        <div class="growth-item">
+          <div class="growth-item-title">Consent-as-a-Service Revenue</div>
+          <div class="growth-item-desc">Charge per consent transaction or subscription for routing data between financial information providers and users at ecosystem scale.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Network Effects</div>
+          <div class="growth-item-desc">Every new bank or fintech that joins the network increases the value of the aggregator to all other participants already connected.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Value-Added Analytics</div>
+          <div class="growth-item-desc">Layer credit scoring, fraud signals and cash-flow analytics on top of raw data feeds and sell insights, not just pipes.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Trust &amp; Compliance as a Moat</div>
+          <div class="growth-item-desc">Regulatory licensing and security certification become a defensible position that's hard for new entrants to replicate quickly.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Merchants -->
+  <div id="merchants" class="tab-content">
+    <div class="player-card">
+      <div class="player-head">
+        <div class="player-icon">🛒</div>
+        <div>
+          <div class="player-name">Merchants, Platforms &amp; Corporates</div>
+          <div class="player-role">Embed finance into their own product to boost conversion and retention</div>
+        </div>
+      </div>
+      <div class="growth-grid">
+        <div class="growth-item">
+          <div class="growth-item-title">Embedded Credit &amp; BNPL</div>
+          <div class="growth-item-desc">Offer financing at checkout using API-based instant credit decisions, lifting average order value and reducing cart abandonment.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Working Capital Access</div>
+          <div class="growth-item-desc">MSMEs on marketplaces get supply-chain financing (OCEN-style) based on their transaction history on the platform itself.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Reconciliation &amp; Cash Management</div>
+          <div class="growth-item-desc">Real-time payment and account APIs simplify treasury operations, freeing working capital tied up in manual reconciliation.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">New Revenue Streams</div>
+          <div class="growth-item-desc">Earn referral or interchange-like revenue by distributing embedded insurance, credit and investment products to their own user base.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Consumers -->
+  <div id="consumers" class="tab-content">
+    <div class="player-card">
+      <div class="player-head">
+        <div class="player-icon">👤</div>
+        <div>
+          <div class="player-name">Consumers &amp; MSMEs (Data Owners)</div>
+          <div class="player-role">Sit at the centre of the ecosystem — consent is the currency</div>
+        </div>
+      </div>
+      <div class="growth-grid">
+        <div class="growth-item">
+          <div class="growth-item-title">One View of Money</div>
+          <div class="growth-item-desc">Aggregate accounts, loans, investments and insurance from multiple institutions into a single dashboard without manual downloads.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Better Pricing via Portability</div>
+          <div class="growth-item-desc">Verified financial history travels with the customer, letting new lenders and insurers compete on price instead of relying on incumbency.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Faster Access to Credit</div>
+          <div class="growth-item-desc">Consent-based data sharing replaces weeks of physical document collection, cutting loan approval times from days to minutes.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Granular Consent Control</div>
+          <div class="growth-item-desc">Purpose-bound, time-bound and revocable consent means data is shared only for what it's needed, and can be withdrawn at any time.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Regulators -->
+  <div id="regulators" class="tab-content">
+    <div class="player-card">
+      <div class="player-head">
+        <div class="player-icon">🏛️</div>
+        <div>
+          <div class="player-name">Regulators &amp; Ecosystem Alliances</div>
+          <div class="player-role">Set the rules of trust that make sharing safe at scale</div>
+        </div>
+      </div>
+      <div class="growth-grid">
+        <div class="growth-item">
+          <div class="growth-item-title">Financial Inclusion</div>
+          <div class="growth-item-desc">Standardised, low-cost rails bring formal credit and insurance to segments that were previously unscorable or unprofitable to serve.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Systemic Transparency</div>
+          <div class="growth-item-desc">Structured, auditable data flows make it easier to monitor systemic risk, detect fraud patterns and enforce conduct standards.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Level Playing Field</div>
+          <div class="growth-item-desc">Common API standards prevent large incumbents from gatekeeping data, letting smaller players compete on product rather than access.</div>
+        </div>
+        <div class="growth-item">
+          <div class="growth-item-title">Public Digital Infrastructure</div>
+          <div class="growth-item-desc">Reusable rails (ID, consent, payments) become national infrastructure that every future fintech builds on, compounding economic value.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: STATS / GROWTH FLYWHEEL -->
+<section class="section section-alt">
+  <div class="section-label">The Growth Flywheel</div>
+  <div class="section-title">Why Open Finance <em>Compounds</em></div>
+  <p class="section-subtitle">More consented data improves underwriting → better underwriting improves approval rates and pricing → better outcomes drive more consumer adoption → more adoption attracts more data providers and TPPs to the network — and the cycle accelerates.</p>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num">3-5×</div>
+      <div class="stat-label">Faster loan turnaround with consented data vs. manual documents</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">30-40%</div>
+      <div class="stat-label">Lower customer acquisition cost via embedded / partner channels</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">10×+</div>
+      <div class="stat-label">Larger addressable credit base when alt-data underwriting is used</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">24×7</div>
+      <div class="stat-label">Always-on API access vs. batch, business-hours legacy exports</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: COMPARISON -->
+<section class="section">
+  <div class="section-label">Quick Comparison</div>
+  <div class="section-title">Closed Banking vs. Open Banking vs. <em>Open Finance</em></div>
+  <div class="table-scroll">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>Closed Banking</th>
+          <th>Open Banking</th>
+          <th>Open Finance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Data scope</strong></td>
+          <td>Bank-held account data only, siloed</td>
+          <td>Bank accounts &amp; payments via API</td>
+          <td>Banking + investments, insurance, pensions, tax</td>
+        </tr>
+        <tr>
+          <td><strong>Access method</strong></td>
+          <td>Manual statements, screen-scraping</td>
+          <td>Regulated APIs with customer consent</td>
+          <td>Standardised APIs across institution types</td>
+        </tr>
+        <tr>
+          <td><strong>Primary beneficiary</strong></td>
+          <td>Incumbent bank</td>
+          <td>Bank + licensed TPPs</td>
+          <td>Entire ecosystem, consumer-centric</td>
+        </tr>
+        <tr>
+          <td><strong>Consent model</strong></td>
+          <td>None / implicit</td>
+          <td>Explicit, purpose-bound consent</td>
+          <td>Granular, revocable, portable consent</td>
+        </tr>
+        <tr>
+          <td><strong>Innovation speed</strong></td>
+          <td>Slow, bank-led roadmap</td>
+          <td>Faster, fintech-led on top of bank rails</td>
+          <td>Fastest — embedded, cross-sector innovation</td>
+        </tr>
+        <tr>
+          <td><strong>Typical products</strong></td>
+          <td>Core banking, statements</td>
+          <td>PFM, cash-flow lending, A2A payments</td>
+          <td>Embedded credit, robo-advice, bundled insurance</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECTION: KEY ENABLERS -->
+<section class="section section-alt">
+  <div class="section-label">Key Enablers</div>
+  <div class="section-title">Infrastructure Behind the <em>Ecosystem</em></div>
+  <p class="section-subtitle">Open Finance runs on a stack of reusable digital public infrastructure and regulatory frameworks that reduce the cost of trust for every participant.</p>
+  <div class="enabler-grid">
+    <div class="enabler-card">
+      <div class="enabler-icon">🔐</div>
+      <div class="enabler-name">Account Aggregator Framework</div>
+      <div class="enabler-desc">Licensed consent managers move financial data between institutions without the data ever passing through the aggregator's own servers unencrypted.</div>
+    </div>
+    <div class="enabler-card">
+      <div class="enabler-icon">⚡</div>
+      <div class="enabler-name">Real-Time Payment Rails</div>
+      <div class="enabler-desc">Interoperable, instant account-to-account payment rails (UPI-style) give PISPs a low-cost, always-on settlement layer.</div>
+    </div>
+    <div class="enabler-card">
+      <div class="enabler-icon">🪪</div>
+      <div class="enabler-name">Digital Identity &amp; e-KYC</div>
+      <div class="enabler-desc">Verifiable digital identity and document vaults let TPPs onboard customers instantly without physical paperwork.</div>
+    </div>
+    <div class="enabler-card">
+      <div class="enabler-icon">📑</div>
+      <div class="enabler-name">Open Credit Enablement</div>
+      <div class="enabler-desc">Standardised loan origination protocols let any lender plug into any marketplace to offer embedded, cash-flow based credit.</div>
+    </div>
+    <div class="enabler-card">
+      <div class="enabler-icon">🛒</div>
+      <div class="enabler-name">Open Commerce Networks</div>
+      <div class="enabler-desc">Decentralised commerce protocols extend the same open, interoperable philosophy from finance into retail and logistics.</div>
+    </div>
+    <div class="enabler-card">
+      <div class="enabler-icon">🛡️</div>
+      <div class="enabler-name">Data Protection Law</div>
+      <div class="enabler-desc">Statutory data-privacy rules define lawful purpose, storage limits and breach liability, giving every participant a shared compliance baseline.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section">
+  <div class="section-label">Common Questions</div>
+  <div class="section-title">Open Finance <em>FAQs</em></div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      <span class="faq-q-text">What's the difference between Open Banking and Open Finance?</span>
+      <span class="faq-icon">▼</span>
+    </div>
+    <div class="faq-answer">
+      Open Banking is scoped to bank accounts — balances, transactions and payment initiation — shared via API with consent. Open Finance is the broader umbrella: it extends the same consent-driven sharing model to investments, insurance, pensions, tax and credit bureau data, giving a full 360° financial picture rather than just a banking one.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      <span class="faq-q-text">How do banks make money if they're giving fintechs access to their data?</span>
+      <span class="faq-icon">▼</span>
+    </div>
+    <div class="faq-answer">
+      Banks monetise in several ways: charging for premium/high-volume API access, earning distribution economics when fintech partners originate deposits or loans that settle on the bank's books, cross-selling based on richer data signals, and reducing their own cost of customer acquisition by reaching users through partner front-ends instead of building every channel themselves.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      <span class="faq-q-text">Is my data safe when it's shared across the ecosystem?</span>
+      <span class="faq-icon">▼</span>
+    </div>
+    <div class="faq-answer">
+      Data only moves with explicit, purpose-bound consent that specifies what is shared, with whom, for how long, and for what use. Consent managers are licensed and audited, transport is encrypted end-to-end, and consent can be revoked at any time. Regulators additionally enforce data-minimisation and breach-notification requirements on every participant in the chain.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      <span class="faq-q-text">Can a fintech operate without partnering with a bank?</span>
+      <span class="faq-icon">▼</span>
+    </div>
+    <div class="faq-answer">
+      Rarely for regulated activities like holding deposits or issuing payment instruments — those still require a licensed institution behind the scenes (Banking-as-a-Service). Open Finance lets fintechs build the customer experience and underwriting logic while a bank or NBFC partner provides the regulated balance sheet and settlement rails underneath.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      <span class="faq-q-text">What role does embedded finance play in this architecture?</span>
+      <span class="faq-icon">▼</span>
+    </div>
+    <div class="faq-answer">
+      Embedded finance sits at the top of the stack, consuming the same consent, data and payment APIs to place financial products — credit, insurance, savings — directly inside non-financial platforms like e-commerce, payroll or ERP software, so users get financial services at the exact moment of need rather than visiting a separate banking app.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">NexusBank</div>
+  <ul class="footer-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="loans.html">Loans</a></li>
+    <li><a href="investments.html">Investments</a></li>
+    <li><a href="payment.html">Payments</a></li>
+    <li><a href="corporate_banking.html">Corporate</a></li>
+    <li><a href="calculator.html">Calculator</a></li>
+    <li><a href="open_finance.html">Open Finance</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2025 NexusBank. All rights reserved.</div>
+</footer>
+
+<script>
+  function showTab(tabName, btn) {
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', function () {
+      const item = this.parentElement;
+      const wasActive = item.classList.contains('active');
+      document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('active'));
+      if (!wasActive) item.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
